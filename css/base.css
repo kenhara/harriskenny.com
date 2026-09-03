@@ -126,6 +126,7 @@ button, a { cursor: pointer; }
 .widget-shade { order: 2; }
 .widget-zoom { order: 3; }
 .widget-close { order: 4; }
+.widget-exit { display: none; order: 5; }
 .widget-shade::before {
   content: ""; position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%);

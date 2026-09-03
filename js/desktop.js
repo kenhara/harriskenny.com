@@ -37,6 +37,7 @@
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
+    layoutWindows();
     renderTasks();
     if (fromUi) {
       try { history.replaceState(null, "", "?era=" + era.id + location.hash); } catch (e) {}
@@ -97,13 +98,55 @@
     $all(".icon").forEach(function (ic) {
       ic.classList.toggle("active", ic.getAttribute("data-app") === id);
     });
+    layoutWindows();
     renderTasks();
   }
 
   function closeApp(id) {
     var win = $(".window[data-win='" + id + "']");
-    if (win) win.classList.remove("open", "front", "zoomed");
+    if (win) win.classList.remove("open", "front", "zoomed", "hypr");
+    layoutWindows();
     renderTasks();
+  }
+
+  function isOmarchy() { return currentEra().id === "omarchy"; }
+
+  /* Hyprland-style: open windows fill the desktop with gaps, no floating cascade. */
+  function layoutWindows() {
+    var open = $all(".window.open");
+    if (!isOmarchy()) {
+      open.forEach(function (w) {
+        w.classList.remove("hypr");
+        if (w.dataset.homeTop) w.style.top = w.dataset.homeTop;
+        if (w.dataset.homeLeft) w.style.left = w.dataset.homeLeft;
+        w.style.right = "";
+        w.style.bottom = "";
+        w.style.width = "";
+        w.style.height = "";
+        w.style.maxWidth = "";
+      });
+      return;
+    }
+    var gap = 10;
+    var n = open.length;
+    open.forEach(function (w, i) {
+      w.classList.add("hypr");
+      w.classList.remove("zoomed");
+      w.style.top = gap + "px";
+      w.style.bottom = gap + "px";
+      w.style.height = "auto";
+      w.style.maxWidth = "none";
+      if (n <= 1) {
+        w.style.left = gap + "px";
+        w.style.right = gap + "px";
+        w.style.width = "auto";
+      } else {
+        var pct = 100 / n;
+        w.style.left = "calc(" + (i * pct) + "% + " + (gap / 2) + "px)";
+        w.style.width = "calc(" + pct + "% - " + gap + "px)";
+        w.style.right = "auto";
+      }
+    });
   }
 
   /* Menubar vs top-panel HTML; visibility is in the era stylesheet. */
@@ -132,7 +175,9 @@
         "<span class='panel-status'><i></i><i></i><i></i></span>";
     }
     if (id === "omarchy") {
-      return "<span class='panel-ws'><b class='on'>1</b><b>2</b><b>3</b></span>" +
+      var v = window.__V ? ("?v=" + window.__V) : "";
+      return "<span class='panel-brand' aria-hidden='true'><img class='panel-logo' src='img/omarchy-logo.svg" + v + "' alt=''></span>" +
+        "<span class='panel-ws'><b class='on'>1</b><b>2</b><b>3</b></span>" +
         "<span class='panel-clock' style='margin:0 auto'></span>" +
         "<span class='panel-status'><i></i><i></i><i></i></span>";
     }
@@ -171,12 +216,15 @@
 
     wins.innerHTML = SITE.apps.map(function (app, i) {
       var wide = app.kind === "folder" ? " win-folder" : "";
-      return "<section class='window" + wide + "' data-win='" + app.id + "' style='top:" + (28 + i * 18) + "px;left:" + (140 + i * 14) + "px'>" +
+      var top = (28 + i * 18) + "px";
+      var left = (140 + i * 14) + "px";
+      return "<section class='window" + wide + "' data-win='" + app.id + "' data-home-top='" + top + "' data-home-left='" + left + "' style='top:" + top + ";left:" + left + "'>" +
         "<div class='titlebar' data-drag='" + app.id + "'>" +
         "<button class='widget widget-close' type='button' data-act='close' aria-label='Close'></button>" +
         "<span class='title'>" + app.windowTitle + "</span>" +
         "<button class='widget widget-shade' type='button' data-act='min' aria-label='Minimize'></button>" +
         "<button class='widget widget-zoom' type='button' data-act='zoom' aria-label='Zoom'></button>" +
+        "<button class='widget widget-exit' type='button' data-act='close' aria-label='Exit'>Exit</button>" +
         "</div>" +
         "<div class='pane'>" + paneFor(app) + "</div></section>";
     }).join("");
@@ -210,6 +258,7 @@
       var drag = null;
       bar.addEventListener("pointerdown", function (e) {
         if (e.target.closest(".widget")) return;
+        if (isOmarchy()) return;
         var win = bar.closest(".window");
         var r = win.getBoundingClientRect();
         var desk = $(".desktop").getBoundingClientRect();
@@ -278,6 +327,12 @@
     go();
     setInterval(go, 30000);
   }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape" || !isOmarchy()) return;
+    var front = $(".window.open.front") || $(".window.open");
+    if (front) closeApp(front.getAttribute("data-win"));
+  });
 
   render();
   bindTimeMachine();

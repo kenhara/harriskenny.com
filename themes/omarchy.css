@@ -20,3 +20,33 @@
 [data-era="omarchy"] .panel-ws b.on { background: #7CA4F4; color: #0c0e12; }
 [data-era="omarchy"] .panel-status i { color: #7CA4F4; }
 [data-era="omarchy"] .about-pane .headshot { border-radius: 6px; outline: 1px solid #2a303a; }
+
+[data-era="omarchy"] .panel-brand {
+  display: inline-flex; align-items: center; margin-right: 2px;
+}
+[data-era="omarchy"] .panel-logo {
+  display: block; width: 16px; height: 16px;
+  object-fit: contain;
+  /* Omarchy green mark on dark bar */
+  filter: brightness(0) saturate(100%) invert(72%) sepia(42%) saturate(487%) hue-rotate(47deg) brightness(96%) contrast(90%);
+}
+[data-era="omarchy"] .panel-top { gap: 12px; }
+[data-era="omarchy"] .window {
+  border-radius: 8px; overflow: hidden;
+}
+[data-era="omarchy"] .window.hypr {
+  max-width: none; min-width: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.45);
+}
+[data-era="omarchy"] .window.hypr .pane { flex: 1 1 auto; overflow: auto; }
+[data-era="omarchy"] .titlebar { cursor: default; }
+[data-era="omarchy"] .widget-shade,
+[data-era="omarchy"] .widget-zoom,
+[data-era="omarchy"] .widget-close { display: none; }
+[data-era="omarchy"] .widget-exit {
+  display: inline-grid; order: 5;
+  width: auto; height: 22px; padding: 0 10px;
+  font: 600 11px/22px "JetBrains Mono", ui-monospace, monospace;
+  background: #2a303a; color: #c8cdd8; border-radius: 3px;
+}
+[data-era="omarchy"] .widget-exit:hover { background: #7CA4F4; color: #0c0e12; }
