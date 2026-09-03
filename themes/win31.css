@@ -1,0 +1,40 @@
+[data-era="win31"] body { font-family: "MS Sans Serif", Tahoma, sans-serif; font-size: 11px; }
+[data-era="win31"] .os { background: #5a5a5a; color: #000; }
+[data-era="win31"] .desktop {
+  background-color: #5a5a5a;
+  background-image: url("../wallpapers/win31.png?v=1788464000");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  image-rendering: pixelated;
+}
+[data-era="win31"] .icon { color: #fff; }
+[data-era="win31"] .icon .label { text-shadow: 1px 1px 0 #000; }
+[data-era="win31"] .icon.active .label { background: #000080; color: #fff; text-shadow: none; outline: none; }
+[data-era="win31"] .window {
+  background: #c0c0c0; border: 2px solid; border-color: #fff #000 #000 #fff;
+  box-shadow: 2px 2px 0 #000;
+}
+[data-era="win31"] .titlebar { height: 18px; margin: 2px; padding: 0 4px; background: #000080; color: #fff; font-weight: 700; --widget-gap: 4px; }
+[data-era="win31"] .widget { background: #c0c0c0; border: 1px solid; border-color: #fff #000 #000 #fff; }
+[data-era="win31"] .widget-close::before {
+  content: ""; position: absolute; left: 3px; right: 3px; top: 6px; width: auto; height: 2px; background: #000; transform: none;
+}
+[data-era="win31"] .widget-close::after { content: none; }
+[data-era="win31"] .widget-shade::before {
+  content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #000;
+}
+[data-era="win31"] .widget-zoom::before {
+  content: ""; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-bottom: 5px solid #000;
+}
+[data-era="win31"] .menubar span { padding: 0 2px; }
+[data-era="win31"] .pane { background: #c0c0c0; }
+[data-era="win31"] .pane .inner, [data-era="win31"] .folder-lead { background: #fff; border: 1px solid #808080; padding: 8px; }
+[data-era="win31"] .btn { background: #c0c0c0; border: 2px solid; border-color: #fff #000 #000 #fff; }
+[data-era="win31"] .menubar {
+  display: flex; height: 22px; padding: 0 8px; align-items: center; gap: 14px;
+  background: #c0c0c0; border-bottom: 1px solid #000; color: #000; font-weight: 700;
+}
+[data-era="win31"] .about-pane .headshot { image-rendering: pixelated; border: 2px solid; border-color: #fff #000 #000 #fff; border-radius: 0; }

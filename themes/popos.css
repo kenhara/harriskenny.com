@@ -1,0 +1,20 @@
+[data-era="popos"] body { font-family: "Fira Sans", "Ubuntu", sans-serif; font-size: 14px; }
+[data-era="popos"] .os { background: #12141a; color: #eee; }
+[data-era="popos"] .desktop {
+  background-color: #0e1116;
+  background-image: url("../wallpapers/popos.jpg?v=1788464000");
+  background-size: cover;
+  background-position: center;
+}
+[data-era="popos"] .icon { color: #f2f2f2; }
+[data-era="popos"] .window { background: #1c1f26; border: 1px solid #3a414c; border-radius: 10px; color: #eee; box-shadow: 0 12px 40px rgba(0,0,0,.45); }
+[data-era="popos"] .titlebar { height: 36px; padding: 0 12px; background: #16181e; border-radius: 10px 10px 0 0; color: #ddd; --widget-gap: 8px; }
+[data-era="popos"] .widget { width: 18px; height: 18px; background: #2a2f38; border: 0; border-radius: 4px; color: #ddd; }
+[data-era="popos"] .pane { background: #1c1f26; }
+[data-era="popos"] .btn { background: #48b9c7; color: #082226; border: 0; border-radius: 6px; font-weight: 600; }
+[data-era="popos"] .panel-top {
+  display: flex; height: 32px; padding: 0 12px; align-items: center; gap: 16px;
+  background: #1a1d24; color: #ddd; border-bottom: 1px solid #2c313c;
+}
+[data-era="popos"] .panel-status i { color: #48b9c7; }
+[data-era="popos"] .about-pane .headshot { border-radius: 50%; }

@@ -1,0 +1,20 @@
+[data-era="xfce"] body { font-family: "DejaVu Sans", "Liberation Sans", sans-serif; font-size: 13px; }
+[data-era="xfce"] .os { background: #2e3436; color: #111; }
+[data-era="xfce"] .desktop {
+  background-color: #4a6a80;
+  background-image: url("../wallpapers/debian.jpg?v=1788464000");
+  background-size: cover;
+  background-position: center;
+}
+[data-era="xfce"] .icon { color: #fff; }
+[data-era="xfce"] .icon .label { text-shadow: 1px 1px 0 #000; }
+[data-era="xfce"] .window { background: #ece9e0; border: 1px solid #5a5a5a; box-shadow: 2px 2px 6px rgba(0,0,0,.35); }
+[data-era="xfce"] .titlebar { height: 24px; padding: 0 8px; background: linear-gradient(#d8d4c8,#b8b4a8); color: #222; font-weight: 600; --widget-gap: 6px; }
+[data-era="xfce"] .widget { background: #ddd; border: 1px solid #888; }
+[data-era="xfce"] .pane { background: #f6f4ee; }
+[data-era="xfce"] .btn { background: #e6e2d8; border: 1px solid #888; border-radius: 2px; }
+[data-era="xfce"] .panel-top {
+  display: flex; height: 26px; padding: 0 8px; align-items: center; gap: 12px;
+  background: linear-gradient(#e8e4dc,#c8c4bc); border-bottom: 1px solid #888; color: #222;
+}
+[data-era="xfce"] .about-pane .headshot { border-radius: 3px; box-shadow: 1px 1px 2px rgba(0,0,0,.35); }

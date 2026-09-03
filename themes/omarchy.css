@@ -1,0 +1,22 @@
+[data-era="omarchy"] body { font-family: Inter, "JetBrains Mono", ui-sans-serif, sans-serif; font-size: 13px; }
+[data-era="omarchy"] .os { background: #0f1115; color: #c8cdd8; }
+[data-era="omarchy"] .desktop {
+  background-color: #111318;
+  background-image: url("../wallpapers/omarchy.jpg?v=1788464000");
+  background-size: cover;
+  background-position: center;
+}
+[data-era="omarchy"] .icon { color: #d7dbe3; }
+[data-era="omarchy"] .window { background: #1a1d24; border: 1px solid #2a303a; color: #d7dbe3; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+[data-era="omarchy"] .titlebar { height: 28px; padding: 0 10px; background: #15181e; color: #c8cdd8; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; --widget-gap: 8px; }
+[data-era="omarchy"] .widget { width: 16px; height: 16px; background: #2a303a; border: 0; color: #aaa; }
+[data-era="omarchy"] .pane { background: #1a1d24; }
+[data-era="omarchy"] .btn { background: #7CA4F4; color: #0c0e12; border: 0; border-radius: 2px; font-weight: 600; }
+[data-era="omarchy"] .panel-top {
+  display: flex; height: 28px; padding: 0 12px; align-items: center; gap: 18px;
+  background: #0c0e12; color: #9aa3b2; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px;
+  border-bottom: 1px solid #222;
+}
+[data-era="omarchy"] .panel-ws b.on { background: #7CA4F4; color: #0c0e12; }
+[data-era="omarchy"] .panel-status i { color: #7CA4F4; }
+[data-era="omarchy"] .about-pane .headshot { border-radius: 6px; outline: 1px solid #2a303a; }

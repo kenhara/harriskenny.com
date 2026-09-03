@@ -1,0 +1,50 @@
+[data-era="mac8"] body { font-family: "ChiKareGo2", Geneva, Tahoma, sans-serif; font-size: 16px; -webkit-font-smoothing: none; }
+@font-face { font-family: "ChiKareGo2"; src: url("../fonts/ChiKareGo2.ttf") format("truetype"); font-display: swap; }
+[data-era="mac8"] .os { background: #8b9de9; color: #000; }
+[data-era="mac8"] .desktop {
+  background-color: #8b9de9;
+  background-image: url("../wallpapers/mac8.png?v=1788464000");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  image-rendering: pixelated;
+}
+[data-era="mac8"] .icon { color: #fff; }
+[data-era="mac8"] .icon .label { background: #333366; color: #fff; }
+[data-era="mac8"] .icon.active .label { background: #000; }
+[data-era="mac8"] .window { background: #d4d4d4; border: 1px solid #111; box-shadow: 2px 2px 0 rgba(0,0,0,.4); }
+[data-era="mac8"] .titlebar {
+  height: 19px; margin: 2px 2px 0; background: repeating-linear-gradient(to bottom, #f0f0f0 0 1px, #b4b4b4 1px 2px);
+  font-size: 16px;
+}
+[data-era="mac8"] .titlebar .title { text-align: center; }
+/* Platinum boxes: close left, collapse + zoom right. Collapse is windowshade. */
+[data-era="mac8"] .widget {
+  width: 12px; height: 12px; font-size: 0; position: relative;
+  background: linear-gradient(#fdfdfd 0 45%, #d0d0d0 55% 100%);
+  border: 1px solid #4a4a4a;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #9a9a9a;
+}
+[data-era="mac8"] .titlebar { --widget-gap: 4px; padding: 0 4px; }
+[data-era="mac8"] .widget-close::before,
+[data-era="mac8"] .widget-close::after { content: none; }
+/* Zoom: small filled square tucked into the upper-left, as Platinum drew it. */
+[data-era="mac8"] .widget-zoom::before {
+  content: ""; position: absolute; left: 1px; top: 1px;
+  width: 6px; height: 6px; transform: none;
+  border: 1px solid #4a4a4a; background: #8e8e8e;
+  box-sizing: border-box;
+}
+/* Collapse: a single centered rule. */
+[data-era="mac8"] .widget-shade::before {
+  content: ""; position: absolute; left: 2px; right: 2px; top: 50%;
+  width: auto; transform: translateY(-50%);
+  border-top: 1px solid #4a4a4a;
+}
+[data-era="mac8"] .mb-apple { font-size: 13px; }
+[data-era="mac8"] .pane { background: #fff; margin: 3px; border: 1px solid #000; }
+[data-era="mac8"] .btn { background: #dedede; border: 1px solid #000; border-radius: 3px; }
+[data-era="mac8"] .menubar {
+  display: flex; height: 22px; padding: 0 8px; align-items: center; gap: 14px;
+  background: linear-gradient(#f6f6f6,#dcdcdc); border-bottom: 1px solid #000; font-size: 16px;
+}
+[data-era="mac8"] .about-pane .headshot { border: 1px solid #000; border-radius: 0; }

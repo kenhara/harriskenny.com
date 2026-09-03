@@ -1,0 +1,286 @@
+/* Layout only. Color and chrome come from themes/*.css */
+:root { --tm: 52px; }
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body { font-family: Tahoma, "Segoe UI", sans-serif; }
+button, a { cursor: pointer; }
+
+.tm {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--tm);
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 44px;
+  color: #e8e4d8;
+  background: #141210;
+  border-bottom: 1px solid #000;
+  user-select: none;
+  cursor: default;
+}
+.tm-title { flex: 0 0 112px; display: flex; flex-direction: column; gap: 5px; }
+.tm-title strong { font: 600 12px/1 ui-sans-serif, system-ui, sans-serif; color: #fff4d5; }
+.tm-word {
+  flex: 0 0 auto;
+  font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #c4b89a;
+}
+.tm-track {
+  position: relative;
+  flex: 1;
+  height: 28px;
+  cursor: grab;
+}
+.tm-track:active { cursor: grabbing; }
+.tm-track:focus-visible { outline: 1px solid #e9d38f; outline-offset: 4px; }
+.tm-line {
+  position: absolute; left: 24px; right: 24px; top: 13px; height: 2px;
+  background: linear-gradient(90deg, #5c4a2a, #d4c39a 40%, #8ab4c8 70%, #6ee7a0);
+  border-radius: 1px;
+}
+.tm-ticks { position: absolute; inset: 0; }
+.tm-tick {
+  position: absolute; top: 0; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  background: none; border: 0; color: #9a9080; padding: 0;
+  font: 10px/1 ui-sans-serif, system-ui, sans-serif;
+}
+.tm-tick i {
+  display: block; width: 7px; height: 7px; margin: 10px 0 6px;
+  border-radius: 50%; background: #3a342c; box-shadow: 0 0 0 1px #000;
+}
+.tm-tick.on { color: #f3ead2; }
+.tm-tick.on i { background: #f3ead2; }
+.tm-handle {
+  position: absolute; top: 5px; width: 18px; height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6d8, #c9a227 55%, #6a4a10);
+  box-shadow: 0 0 0 1px #000, 0 2px 6px rgba(0,0,0,.6);
+  pointer-events: none;
+}
+
+.os { position: absolute; inset: var(--tm) 0 0 0; display: flex; flex-direction: column; }
+.desktop { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.board {
+  position: absolute;
+  top: 12px; left: 10px; bottom: 12px;
+  width: 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+}
+.icon {
+  position: static; width: 92px; border: 0; background: none;
+  color: inherit; font: inherit;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex: 0 0 auto;
+}
+.icon .glyph-wrap {
+  position: relative;
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+}
+.icon .glyph { width: 32px; height: 32px; image-rendering: pixelated; display: block; }
+.icon .glyph-logo { image-rendering: auto; width: 24px; height: 24px; }
+/* GitHub + Omarchy: white / Tokyo-Night green on black, every era. */
+.i-github .glyph-wrap,
+.i-omarchy .glyph-wrap { background: #000; overflow: hidden; }
+.i-github .glyph-logo { width: 72%; height: 72%; }
+.i-omarchy .glyph-logo { width: 90%; height: 90%; }
+/* OutboundSync / LinkedIn / X are full app-icon marks (own fill). */
+.i-outboundsync .glyph-logo,
+.i-linkedin .glyph-logo,
+.i-x .glyph-logo { width: 100%; height: 100%; }
+.icon .dos-file { display: none; }
+.icon .label { padding: 1px 4px; text-align: center; max-width: 92px; font-size: 11px; }
+.icon.active .label { outline: 1px dotted; }
+
+.window {
+  display: none; position: absolute; z-index: 5; min-width: 280px; max-width: 460px;
+  flex-direction: column;
+}
+.window.open { display: flex; }
+.window.front { z-index: 9; }
+.window.win-folder { max-width: 420px; }
+/* Titlebar DOM: close · title · min · zoom. Default packs widgets right
+   (title flexes). Win 3.1 / OS 8 keep close left via order. OS X / MacOS
+   absolutely center the title so traffic lights pack left. */
+.titlebar {
+  display: flex; align-items: center; gap: var(--widget-gap, 6px);
+  cursor: grab; user-select: none;
+}
+.titlebar .title {
+  flex: 1 1 auto; min-width: 0; order: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.widget {
+  box-sizing: border-box; flex: 0 0 auto; order: 2;
+  width: 16px; height: 14px; margin: 0; padding: 0;
+  position: relative; display: grid; place-items: center;
+  cursor: pointer; font: 0/0 sans-serif; color: inherit;
+  appearance: none; -webkit-appearance: none;
+}
+.widget-shade { order: 2; }
+.widget-zoom { order: 3; }
+.widget-close { order: 4; }
+.widget-shade::before {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px; height: 0; border-top: 1.5px solid currentColor;
+}
+.widget-zoom::before {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%); box-sizing: border-box;
+  width: 7px; height: 6px; border: 1.3px solid currentColor;
+}
+.widget-close::before,
+.widget-close::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 8px; height: 1.5px; background: currentColor;
+}
+.widget-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.widget-close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+[data-era="win31"] .widget-close,
+[data-era="mac8"] .widget-close { order: 0; }
+
+[data-era="osx"] .titlebar,
+[data-era="macos"] .titlebar { position: relative; --widget-gap: 8px; }
+[data-era="osx"] .titlebar .title,
+[data-era="macos"] .titlebar .title {
+  position: absolute; left: 0; right: 0;
+  text-align: center; pointer-events: none;
+  flex: none; order: 0;
+}
+[data-era="osx"] .widget,
+[data-era="macos"] .widget { order: 0; }
+[data-era="osx"] .widget::before,
+[data-era="osx"] .widget::after,
+[data-era="macos"] .widget::before,
+[data-era="macos"] .widget::after { content: none; }
+
+.mb-apple {
+  display: inline-block; width: 11px; height: 13px; margin-right: 6px;
+  position: relative; opacity: .88; flex: 0 0 11px;
+}
+.mb-apple::before {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 11px; height: 10px; border-radius: 40% 40% 45% 45%;
+  background: currentColor;
+}
+.mb-apple::after {
+  content: ""; position: absolute; left: 5px; top: 0;
+  width: 5px; height: 5px; border-radius: 50% 0 50% 0;
+  border-left: 1.4px solid currentColor; transform: rotate(-28deg);
+}
+.mb-app { font-weight: 700; margin-right: 4px; }
+.panel-status { display: inline-flex; align-items: center; }
+.panel-status i { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .5; margin-left: 4px; }
+.panel-ws { display: inline-flex; gap: 2px; }
+.panel-ws b { display: inline-block; padding: 0 6px; border-radius: 2px; font-weight: 400; opacity: .5; }
+.panel-ws b.on { opacity: 1; font-weight: 700; }
+.pane { padding: 12px 14px; min-height: 90px; }
+.pane h1 { margin: 0 0 8px; font-size: 18px; font-weight: 700; }
+.pane p { margin: 0 0 12px; }
+.about-pane { text-align: center; }
+.about-pane .headshot {
+  display: block; width: 120px; height: 120px; object-fit: cover;
+  margin: 0 auto 12px; border-radius: 4px;
+}
+.about-pane .about-body { text-align: left; }
+.about-pane .about-body p { margin: 0 0 10px; }
+.folder .btn { margin-top: 12px; }
+
+.glyph-photo { object-fit: cover; image-rendering: auto; }
+.glyph-photo, .glyph-logo { filter: none; }
+.btn {
+  display: inline-block; padding: 4px 12px; text-decoration: none; color: inherit;
+  font: inherit;
+}
+.folder-lead { margin-bottom: 12px; }
+.folder { list-style: none; margin: 0; padding: 0; }
+.folder li + li { margin-top: 4px; }
+.folder a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px; color: inherit; text-decoration: none;
+}
+.folder .glyph { width: 24px; height: 24px; flex: 0 0 24px; image-rendering: pixelated; }
+.folder b { display: block; font-size: 13px; }
+.folder em { display: block; font-style: normal; font-size: 11px; opacity: .72; }
+.menubar, .panel-top, .taskbar, .dock, .start-menu { display: none; }
+
+.window.zoomed { inset: 8px !important; max-width: none; }
+.tasks { display: flex; gap: 3px; flex: 1; min-width: 0; }
+.task-button { min-width: 120px; max-width: 190px; height: 22px; overflow: hidden; text-align: left; white-space: nowrap; font: inherit; background: #c0c0c0; border: 2px solid; border-color: #fff #000 #000 #fff; }
+.task-button.front { border-color: #808080 #fff #fff #808080; background: #d0d0d0; }
+
+/* Icon model: wrap = era plate (border/radius/shadow/optional fill).
+   Content sits ON the plate. Photos and real logos never take era filters
+   or wrap background-images, so plates can't cover them. */
+[data-era="dos"] .icon .glyph { display: none; }
+[data-era="dos"] .icon .glyph-wrap { width: auto; height: auto; background: none; border: 0; box-shadow: none; }
+[data-era="dos"] .icon .dos-file {
+  display: block;
+  font: 12px/1.2 "Courier New", "Lucida Console", ui-monospace, monospace;
+  color: #55ffff;
+  letter-spacing: .02em;
+  white-space: nowrap;
+}
+[data-era="dos"] .icon .label { display: none; }
+[data-era="dos"] .board { width: 220px; align-items: flex-start; }
+[data-era="dos"] .icon { width: auto; align-items: flex-start; }
+
+[data-era="win31"] .glyph-wrap {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #fff #000 #000 #fff;
+  box-shadow: 1px 1px 0 #000;
+}
+[data-era="win31"] .glyph-photo { width: 28px; height: 28px; }
+
+[data-era="win95"] .glyph-wrap { filter: drop-shadow(1px 1px 0 #000); }
+
+[data-era="mac8"] .glyph-wrap {
+  background: linear-gradient(#f4f4f4, #b8b8b8);
+  border: 1px solid #111;
+  box-shadow: inset 1px 1px 0 #fff, 1px 1px 0 #666;
+}
+[data-era="mac8"] .glyph-photo { width: 30px; height: 30px; }
+
+[data-era="osx"] .glyph-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
+}
+[data-era="osx"] .glyph-wrap::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.45), transparent 46%);
+  pointer-events: none;
+}
+
+[data-era="xfce"] .glyph-wrap {
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.45);
+}
+
+[data-era="popos"] .glyph-wrap {
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+}
+
+[data-era="macos"] .glyph-wrap {
+  border-radius: 22%;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+}
+
+[data-era="omarchy"] .glyph-wrap {
+  border-radius: 6px;
+  outline: 1px solid #2a303a;
+  background: #1a1d24;
+}
