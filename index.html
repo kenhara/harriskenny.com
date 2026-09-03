@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harris Kenny</title>
+  <meta name="description" content="Harris Kenny — founder of OutboundSync. A tiny Platinum Mac OS 8 desktop.">
+  <meta name="theme-color" content="#0d716a">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="platinum.css">
+</head>
+<body>
+  <div class="os">
+    <header class="menubar">
+      <nav aria-label="Desktop menu">
+        <span class="app">HK</span>
+        <span>File</span>
+        <span>Edit</span>
+        <span>View</span>
+        <span>Special</span>
+      </nav>
+      <time class="clock" id="clock" datetime="2026-09-03">Thu 6:55 AM</time>
+    </header>
+
+    <div class="desktop">
+      <aside class="icons-left">
+        <button class="icon" type="button" id="icon-disk" aria-label="HK Disk">
+          <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true" shape-rendering="crispEdges">
+            <rect x="4" y="6" width="24" height="18" fill="#c5dff0" stroke="#202020"/>
+            <rect x="6" y="8" width="20" height="8" fill="#4f8ecf"/>
+            <rect x="10" y="18" width="12" height="4" fill="#eeeeee" stroke="#393939"/>
+            <rect x="8" y="24" width="16" height="3" fill="#808080"/>
+          </svg>
+          <span class="label">HK Disk</span>
+        </button>
+        <button class="icon active" type="button" id="icon-about" aria-label="About Harris Kenny">
+          <svg class="glyph" viewBox="0 0 32 32" aria-hidden="true" shape-rendering="crispEdges">
+            <rect x="7" y="4" width="18" height="24" fill="#ffffff" stroke="#202020"/>
+            <rect x="7" y="4" width="18" height="4" fill="#cccccc"/>
+            <rect x="9" y="5" width="3" height="2" fill="#393939"/>
+            <rect x="10" y="11" width="12" height="2" fill="#000000"/>
+            <rect x="10" y="15" width="10" height="1" fill="#393939"/>
+            <rect x="10" y="18" width="8" height="1" fill="#393939"/>
+          </svg>
+          <span class="label">About</span>
+        </button>
+      </aside>
+
+      <aside class="icons-right">
+        <div class="icon" aria-hidden="true">
+          <svg class="glyph" viewBox="0 0 32 32" shape-rendering="crispEdges">
+            <rect x="9" y="4" width="14" height="4" fill="#dddddd" stroke="#202020"/>
+            <rect x="7" y="8" width="18" height="18" fill="#aaaaaa" stroke="#202020"/>
+            <rect x="11" y="12" width="10" height="10" fill="#eeeeee"/>
+          </svg>
+          <span class="label">Trash</span>
+        </div>
+      </aside>
+
+      <section class="window window-disk inactive" id="disk-window" aria-label="HK Disk">
+        <div class="titlebar" data-drag="disk-window">
+          <span class="stripes" aria-hidden="true"></span>
+          <button class="widget widget-close" type="button" aria-hidden="true" tabindex="-1"><span class="widget-face"></span></button>
+          <p class="title">HK Disk</p>
+          <button class="widget widget-zoom" type="button" aria-hidden="true" tabindex="-1"><span class="widget-face"></span><span class="mark"></span></button>
+          <button class="widget widget-shade" type="button" aria-hidden="true" tabindex="-1"><span class="widget-face"></span><span class="mark"></span></button>
+        </div>
+        <div class="pane">
+          <ul class="list">
+            <li><a href="#about-window">About</a></li>
+            <li>Sparklekeys</li>
+            <li>OutboundSync</li>
+          </ul>
+        </div>
+        <span class="grow" aria-hidden="true"></span>
+      </section>
+
+      <main class="window window-about" id="about-window">
+        <div class="titlebar" data-drag="about-window">
+          <span class="stripes" aria-hidden="true"></span>
+          <button class="widget widget-close" type="button" data-act="close" aria-label="Close"><span class="widget-face"></span></button>
+          <p class="title">Harris Kenny</p>
+          <button class="widget widget-zoom" type="button" data-act="zoom" aria-label="Zoom"><span class="widget-face"></span><span class="mark"></span></button>
+          <button class="widget widget-shade" type="button" data-act="shade" aria-label="Collapse"><span class="widget-face"></span><span class="mark"></span></button>
+        </div>
+        <div class="pane about-body">
+          <h1>Harris Kenny</h1>
+          <p class="lede">Founder of <a href="https://outboundsync.com">OutboundSync</a></p>
+          <p class="notes">Omarchy Kids contributor. Sparklekeys, a plugin.</p>
+          <nav class="links" aria-label="Links">
+            <a class="btn btn-default" href="https://outboundsync.com">OutboundSync</a>
+            <a class="btn" href="https://github.com/kenhara">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/in/harriskenny">LinkedIn</a>
+            <a class="btn" href="https://x.com/harriskennyx">@harriskennyx</a>
+          </nav>
+        </div>
+        <span class="grow" aria-hidden="true"></span>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var clock = document.getElementById("clock");
+      if (clock) {
+        var fmt = new Intl.DateTimeFormat("en-US", {
+          weekday: "short", hour: "numeric", minute: "2-digit", hour12: true,
+          timeZone: "America/Denver"
+        });
+        function tick() { clock.textContent = fmt.format(new Date()).replace(",", ""); }
+        tick();
+        setInterval(tick, 30000);
+      }
+
+      var about = document.getElementById("about-window");
+      var mobile = function () { return window.matchMedia("(max-width: 640px)").matches; };
+
+      document.querySelectorAll("[data-act]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var act = btn.getAttribute("data-act");
+          if (act === "shade") about.classList.toggle("shaded");
+          if (act === "zoom" && !mobile()) about.classList.toggle("zoomed");
+          if (act === "close" && !mobile()) {
+            about.classList.add("closed");
+            document.getElementById("icon-about").classList.remove("active");
+          }
+        });
+      });
+
+      document.getElementById("icon-about").addEventListener("click", function () {
+        about.classList.remove("closed", "shaded");
+        document.getElementById("icon-about").classList.add("active");
+      });
+      document.getElementById("icon-disk").addEventListener("click", function () {
+        document.getElementById("disk-window").classList.toggle("shaded");
+      });
+
+      document.querySelectorAll("[data-drag]").forEach(function (bar) {
+        var id = bar.getAttribute("data-drag");
+        var win = document.getElementById(id);
+        var drag = null;
+        bar.addEventListener("pointerdown", function (e) {
+          if (mobile() || e.target.closest(".widget")) return;
+          var r = win.getBoundingClientRect();
+          var desk = win.offsetParent.getBoundingClientRect();
+          drag = { dx: e.clientX - r.left, dy: e.clientY - r.top, desk: desk };
+          win.style.zIndex = "8";
+          bar.setPointerCapture(e.pointerId);
+        });
+        bar.addEventListener("pointermove", function (e) {
+          if (!drag) return;
+          win.style.left = Math.max(0, e.clientX - drag.desk.left - drag.dx) + "px";
+          win.style.top = Math.max(0, e.clientY - drag.desk.top - drag.dy) + "px";
+        });
+        bar.addEventListener("pointerup", function () { drag = null; });
+      });
+    })();
+  </script>
+</body>
+</html>
