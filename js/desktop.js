@@ -37,7 +37,7 @@
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
-    syncOmarchyChrome();
+    syncLauncherChrome();
     renderTasks();
     if (fromUi) {
       try { history.replaceState(null, "", "?era=" + era.id + location.hash); } catch (e) {}
@@ -90,8 +90,11 @@
   }
 
   function isOmarchy() { return currentEra().id === "omarchy"; }
+  function isPopos() { return currentEra().id === "popos"; }
+  function usesLauncher() { return isOmarchy() || isPopos(); }
 
   function goMenuEl() { return $("#go-menu"); }
+  function activitiesEl() { return $("#activities"); }
 
   function showGoMenu(on) {
     var go = goMenuEl();
@@ -101,46 +104,61 @@
       go.classList.remove("open");
       return;
     }
-    if (on) {
-      go.hidden = false;
-      go.classList.add("open");
-    } else {
-      go.classList.remove("open");
-      go.hidden = true;
-    }
+    go.hidden = !on;
+    go.classList.toggle("open", !!on);
   }
 
-  function syncOmarchyChrome() {
-    if (!isOmarchy()) {
+  function showActivities(on) {
+    var act = activitiesEl();
+    if (!act) return;
+    if (!isPopos()) {
+      act.hidden = true;
+      act.classList.remove("open");
+      return;
+    }
+    act.hidden = !on;
+    act.classList.toggle("open", !!on);
+  }
+
+  function resetWindowGeometry(w) {
+    w.classList.remove("hypr", "omarchy-pop", "pop-pop");
+    if (w.dataset.homeTop) w.style.top = w.dataset.homeTop;
+    if (w.dataset.homeLeft) w.style.left = w.dataset.homeLeft;
+    w.style.right = "";
+    w.style.bottom = "";
+    w.style.width = "";
+    w.style.height = "";
+    w.style.maxWidth = "";
+    w.style.transform = "";
+  }
+
+  function syncLauncherChrome() {
+    if (!usesLauncher()) {
       showGoMenu(false);
-      $all(".window").forEach(function (w) {
-        w.classList.remove("hypr", "omarchy-pop");
-        if (w.dataset.homeTop) w.style.top = w.dataset.homeTop;
-        if (w.dataset.homeLeft) w.style.left = w.dataset.homeLeft;
-        w.style.right = "";
-        w.style.bottom = "";
-        w.style.width = "";
-        w.style.height = "";
-        w.style.maxWidth = "";
-        w.style.transform = "";
-      });
+      showActivities(false);
+      $all(".window").forEach(resetWindowGeometry);
       return;
     }
     var open = $all(".window.open");
     if (open.length) {
       showGoMenu(false);
-      open.forEach(function (w) { placeOmarchyPop(w); });
-    } else {
+      showActivities(false);
+      open.forEach(placeLauncherPop);
+    } else if (isOmarchy()) {
+      showActivities(false);
       showGoMenu(true);
+    } else {
+      showGoMenu(false);
+      showActivities(true);
     }
   }
 
-  function placeOmarchyPop(win) {
+  function placeLauncherPop(win) {
     var app = SITE.apps.find(function (a) { return a.id === win.getAttribute("data-win"); });
     var wide = app && app.kind === "folder";
     var about = app && app.kind === "about";
     var w = wide ? 440 : (about ? 380 : 360);
-    win.classList.add("omarchy-pop");
+    win.classList.add(isPopos() ? "pop-pop" : "omarchy-pop");
     win.classList.remove("hypr", "zoomed");
     win.style.width = w + "px";
     win.style.maxWidth = "min(92vw, " + w + "px)";
@@ -155,10 +173,12 @@
   function openApp(id) {
     var win = $(".window[data-win='" + id + "']");
     if (!win) return;
-    /* Omarchy: one centered popup at a time, Go menu hides. */
-    if (isOmarchy()) {
+    if (usesLauncher()) {
       $all(".window.open").forEach(function (w) {
-        if (w !== win) w.classList.remove("open", "front", "omarchy-pop");
+        if (w !== win) {
+          w.classList.remove("open", "front", "omarchy-pop", "pop-pop");
+          resetWindowGeometry(w);
+        }
       });
     }
     win.classList.add("open", "front");
@@ -167,29 +187,27 @@
     $all(".icon").forEach(function (ic) {
       ic.classList.toggle("active", ic.getAttribute("data-app") === id);
     });
-    syncOmarchyChrome();
+    syncLauncherChrome();
     renderTasks();
   }
 
   function closeApp(id) {
     var win = $(".window[data-win='" + id + "']");
-    if (win) win.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop");
     if (win) {
-      win.style.transform = "";
-      win.style.width = "";
-      win.style.maxWidth = "";
-      if (win.dataset.homeTop) win.style.top = win.dataset.homeTop;
-      if (win.dataset.homeLeft) win.style.left = win.dataset.homeLeft;
+      win.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
+      resetWindowGeometry(win);
     }
-    syncOmarchyChrome();
+    syncLauncherChrome();
     renderTasks();
   }
 
-  function backToGo() {
+  function backToLauncher() {
     $all(".window.open").forEach(function (w) {
-      closeApp(w.getAttribute("data-win"));
+      w.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
+      resetWindowGeometry(w);
     });
-    showGoMenu(true);
+    syncLauncherChrome();
+    renderTasks();
   }
 
   /* Menubar vs top-panel HTML; visibility is in the era stylesheet. */
@@ -214,7 +232,8 @@
         "<span style='margin-left:auto' class='panel-clock'></span>";
     }
     if (id === "popos") {
-      return "<span>Activities</span><span class='panel-clock' style='margin:0 auto'></span>" +
+      return "<button type='button' class='panel-activities' id='panel-activities'>Activities</button>" +
+        "<span class='panel-clock' style='margin:0 auto'></span>" +
         "<span class='panel-status'><i></i><i></i><i></i></span>";
     }
     if (id === "omarchy") {
@@ -232,6 +251,12 @@
     if (menubar) menubar.innerHTML = menubarHtml(id);
     if (panel) panel.innerHTML = panelHtml(id);
     if (lastClockText) $all("#clock, .panel-clock").forEach(function (n) { n.textContent = lastClockText; });
+    var actBtn = $("#panel-activities");
+    if (actBtn) actBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if ($(".window.open")) backToLauncher();
+      else showActivities(!(activitiesEl() && activitiesEl().classList.contains("open")));
+    });
   }
 
   function render() {
@@ -272,6 +297,30 @@
       filter && filter.addEventListener("keydown", function (e) { e.stopPropagation(); });
     }
 
+    var act = activitiesEl();
+    if (act) {
+      act.innerHTML =
+        "<div class='act-search'><input type='search' class='act-filter' placeholder='Type to search…' aria-label='Search' autocomplete='off'></div>" +
+        "<div class='act-grid'>" + SITE.apps.map(function (app) {
+          return "<button type='button' class='act-app' data-app='" + app.id + "'>" +
+            window.ICONS.wrap(app.id) + "<span class='act-label'>" + app.name + "</span></button>";
+        }).join("") + "</div>" +
+        "<div class='act-tabs'><button type='button' class='act-tab'>Frequent</button>" +
+        "<button type='button' class='act-tab on'>All</button></div>" +
+        "<p class='act-hint'>Super · Esc · Activities</p>";
+      var af = $(".act-filter", act);
+      if (af) {
+        af.addEventListener("input", function () {
+          var q = af.value.trim().toLowerCase();
+          $all(".act-app", act).forEach(function (btn) {
+            var name = (btn.textContent || "").toLowerCase();
+            btn.hidden = q && name.indexOf(q) === -1;
+          });
+        });
+        af.addEventListener("keydown", function (e) { e.stopPropagation(); });
+      }
+    }
+
     if (dock) {
       dock.innerHTML = SITE.apps.map(function (app) {
         return "<button type='button' class='icon i-" + app.id + "' data-app='" + app.id + "'>" + window.ICONS.wrap(app.id) + "</button>";
@@ -284,7 +333,7 @@
       var left = (140 + i * 14) + "px";
       return "<section class='window" + wide + "' data-win='" + app.id + "' data-home-top='" + top + "' data-home-left='" + left + "' style='top:" + top + ";left:" + left + "'>" +
         "<div class='titlebar' data-drag='" + app.id + "'>" +
-        "<button class='widget widget-back' type='button' data-act='back' aria-label='Back to Go'>←</button>" +
+        "<button class='widget widget-back' type='button' data-act='back' aria-label='Back'>←</button>" +
         "<button class='widget widget-close' type='button' data-act='close' aria-label='Close'></button>" +
         "<span class='title'>" + app.windowTitle + "</span>" +
         "<button class='widget widget-shade' type='button' data-act='min' aria-label='Minimize'></button>" +
@@ -314,9 +363,9 @@
           e.stopPropagation();
           var act = btn.getAttribute("data-act");
           var id = win.getAttribute("data-win");
-          if (act === "back") { backToGo(); return; }
+          if (act === "back") { backToLauncher(); return; }
           if (act === "close" || act === "min") {
-            if (isOmarchy()) backToGo();
+            if (usesLauncher()) backToLauncher();
             else closeApp(id);
           }
           if (act === "zoom") win.classList.toggle("zoomed");
@@ -327,7 +376,7 @@
       var drag = null;
       bar.addEventListener("pointerdown", function (e) {
         if (e.target.closest(".widget")) return;
-        if (isOmarchy()) return;
+        if (usesLauncher()) return;
         var win = bar.closest(".window");
         var r = win.getBoundingClientRect();
         var desk = $(".desktop").getBoundingClientRect();
@@ -398,21 +447,24 @@
   }
 
   document.addEventListener("keydown", function (e) {
-    if (!isOmarchy()) return;
+    if (!usesLauncher()) return;
     if (e.key === "Escape") {
-      if ($(".window.open")) { e.preventDefault(); backToGo(); return; }
-      var go = goMenuEl();
-      if (go && !go.hidden) { /* keep menu; Esc on empty desktop is fine */ }
+      if ($(".window.open")) { e.preventDefault(); backToLauncher(); }
       return;
     }
-    /* Super / Meta toggles the Go menu (Omarchy habit). */
+    /* Super / Meta toggles the era launcher (Go or Activities). */
     if (e.key === "Meta" || e.key === "OS" || e.code === "MetaLeft" || e.code === "MetaRight") {
       e.preventDefault();
-      if ($(".window.open")) { backToGo(); return; }
-      var go = goMenuEl();
-      if (!go) return;
-      if (go.hidden || !go.classList.contains("open")) showGoMenu(true);
-      else showGoMenu(false);
+      if ($(".window.open")) { backToLauncher(); return; }
+      if (isOmarchy()) {
+        var go = goMenuEl();
+        if (!go) return;
+        showGoMenu(go.hidden || !go.classList.contains("open"));
+      } else if (isPopos()) {
+        var act = activitiesEl();
+        if (!act) return;
+        showActivities(act.hidden || !act.classList.contains("open"));
+      }
     }
   });
 

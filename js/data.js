@@ -59,8 +59,8 @@ window.SITE = {
     },
     {
       id: "x",
-      name: "X",
-      windowTitle: "X",
+      name: "X (Twitter)",
+      windowTitle: "X (Twitter)",
       kind: "link",
       blurb: "I'm active on X @harriskennyx, where you can find me posting about Omarchy and running OutboundSync.",
       action: { label: "Visit my X profile", href: "https://x.com/harriskennyx" }
