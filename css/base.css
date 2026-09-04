@@ -400,6 +400,45 @@ button, a { cursor: pointer; }
 .phone-icon .label { text-align: center; max-width: 72px; font-size: 11px; }
 .phone-icon .dos-file { display: none; }
 
+
+.phone-home.phone-home-icons {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  padding-bottom: 4px;
+}
+.phone-pages {
+  display: none;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 0 12px;
+}
+.phone-pages span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.28);
+}
+.phone-pages span.on { background: rgba(255,255,255,.85); }
+.phone-dock {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 28px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 4px;
+}
+.phone-dock .phone-icon .label { display: none; }
+.phone-dock .glyph-wrap { width: 56px; height: 56px; }
+
+
+/* Feature phones: softkeys own Back — avoid duplicate with sheet-bar */
+html.phone-feature .phone-back { display: none !important; }
+
 .phone-sheet {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
@@ -457,11 +496,60 @@ button, a { cursor: pointer; }
 }
 
 @media (max-width: 720px) {
-  :root { --tm: 56px; }
-  .tm { padding: 0 10px; gap: 8px; height: var(--tm); }
-  .tm-title { flex: 0 0 72px; }
-  .tm-word { font-size: 9px; letter-spacing: .1em; }
-  .tm-title strong { font-size: 11px; }
-  .tm-tick { font-size: 8px; }
-  .tm-line { left: 10px; right: 10px; }
+  :root:not([data-device="phone"]) { --tm: 56px; }
+  :root:not([data-device="phone"]) .tm { padding: 0 10px; gap: 8px; height: var(--tm); }
+  :root:not([data-device="phone"]) .tm-title { flex: 0 0 72px; }
+  :root:not([data-device="phone"]) .tm-word { font-size: 9px; letter-spacing: .1em; }
+  :root:not([data-device="phone"]) .tm-title strong { font-size: 11px; }
+  :root:not([data-device="phone"]) .tm-tick { font-size: 8px; }
+  :root:not([data-device="phone"]) .tm-line { left: 10px; right: 10px; }
+}
+
+/* Phone mode Time Machine — stacked, thumb-friendly (desktop .tm unchanged) */
+[data-device="phone"] { --tm: 102px; }
+[data-device="phone"] .tm {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  height: var(--tm);
+  gap: 6px;
+  padding: 10px 14px 14px;
+}
+[data-device="phone"] .tm-title {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+}
+[data-device="phone"] .tm-word {
+  flex: 0 0 auto;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: #c4b89a;
+}
+[data-device="phone"] .tm-title strong {
+  font-size: 16px;
+  line-height: 1.1;
+  color: #fff4d5;
+}
+[data-device="phone"] .tm-track {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 52px;
+}
+[data-device="phone"] .tm-line {
+  left: 18px; right: 18px; top: 18px; height: 3px;
+  border-radius: 2px;
+}
+[data-device="phone"] .tm-tick {
+  font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+  color: #9a9080;
+}
+[data-device="phone"] .tm-tick i {
+  width: 12px; height: 12px; margin: 12px 0 8px;
+}
+[data-device="phone"] .tm-handle {
+  top: 8px; width: 28px; height: 28px;
+  margin-left: -14px;
 }

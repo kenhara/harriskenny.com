@@ -243,13 +243,14 @@
   }
 
   function paintPhoneChrome(id) {
+    document.documentElement.classList.toggle("phone-feature", isFeaturePhone());
     var carrier = $("#phone-carrier");
     if (carrier) {
       if (id === "nokia3310") carrier.textContent = "NOKIA";
       else if (id === "razr") carrier.textContent = "MOTOROLA";
       else if (id === "t28") carrier.textContent = "T28";
       else if (id === "gzone") carrier.textContent = "G'zOne";
-      else if (id === "pixel") carrier.textContent = "";
+      else if (id === "ios" || id === "pixel" || id === "iphone") carrier.textContent = "";
       else carrier.textContent = "Carrier";
     }
     if (lastPhoneClockText) {
@@ -277,10 +278,19 @@
       }).join("") + "</ul>";
     } else {
       home.className = "phone-home phone-home-icons";
-      home.innerHTML = "<div class='phone-icons'>" + SITE.apps.map(function (app) {
-        return "<button type='button' class='phone-icon i-" + app.id + "' data-app='" + app.id + "'>" +
-          window.ICONS.wrap(app.id) + "<span class='label'>" + app.name + "</span></button>";
-      }).join("") + "</div>";
+      var useDock = (id === "ios" || id === "pixel");
+      var gridApps = useDock ? SITE.apps.slice(4) : SITE.apps;
+      var dockApps = useDock ? SITE.apps.slice(0, 4) : null;
+      function iconBtn(app, dock) {
+        return "<button type='button' class='phone-icon i-" + app.id + (dock ? " phone-dock-icon" : "") + "' data-app='" + app.id + "'>" +
+          window.ICONS.wrap(app.id) + (dock ? "" : "<span class='label'>" + app.name + "</span>") + "</button>";
+      }
+      var html = "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
+      if (dockApps) {
+        html += "<div class='phone-pages' aria-hidden='true'><span class='on'></span><span></span></div>";
+        html += "<div class='phone-dock'>" + dockApps.map(function (app) { return iconBtn(app, true); }).join("") + "</div>";
+      }
+      home.innerHTML = html;
     }
     home.hidden = !!phoneOpenId;
     $all("[data-app]", home).forEach(function (el) {
@@ -623,6 +633,7 @@
     phoneMode = on;
     eras = activeEras();
     document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    if (!phoneMode) document.documentElement.classList.remove("phone-feature", "phone-app-open");
     setPhoneVisibility(phoneMode);
     if (phoneMode) {
       $all(".window.open").forEach(function (w) {

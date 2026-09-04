@@ -14,8 +14,11 @@
 }
 [data-era="pixel"] .phone-carrier { display: none; }
 [data-era="pixel"] .phone-screen {
-  background: #1e222c;
   color: #e8eaed;
+  background:
+    radial-gradient(ellipse 80% 50% at 80% 20%, rgba(80,120,200,.25), transparent 50%),
+    radial-gradient(ellipse 70% 45% at 15% 70%, rgba(60,160,140,.2), transparent 50%),
+    #1e222c;
 }
 [data-era="pixel"] .phone-home-icons .phone-icons {
   grid-template-columns: repeat(4, 1fr); gap: 18px 10px; padding: 20px 14px 28px;
@@ -55,3 +58,16 @@
 [data-era="pixel"] .phone-home-btn,
 [data-era="pixel"] .phone-island,
 [data-era="pixel"] .phone-earpiece { display: none; }
+
+[data-era="pixel"] .phone-pages { display: flex; margin-top: auto; padding: 14px 0; }
+[data-era="pixel"] .phone-dock {
+  display: flex;
+  background: rgba(48,52,62,.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 28px;
+  padding: 12px 14px;
+  margin: 4px 14px 6px;
+}
+[data-era="pixel"] .phone-dock .glyph-wrap { border-radius: 16px; }
