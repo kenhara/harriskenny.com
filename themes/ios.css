@@ -1,7 +1,7 @@
-/* Current iOS — Dynamic Island, frosted dock, depth */
+/* Current iOS — Dynamic Island, widgets, frosted Search + dock, depth wallpaper */
 [data-era="ios"] body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; font-size: 14px; }
 [data-era="ios"] .os { background: #000; color: #fff; }
-[data-era="ios"] .desktop { background: #050508; }
+[data-era="ios"] .desktop { background: #0a080c; }
 
 [data-era="ios"] .phone-bezel {
   background: #0a0a0c;
@@ -18,8 +18,8 @@
 [data-era="ios"] .phone-island {
   display: block;
   top: 11px;
-  width: 124px;
-  height: 35px;
+  width: 126px;
+  height: 36px;
   border-radius: 22px;
   background: #000;
   box-shadow: 0 4px 14px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.07);
@@ -46,6 +46,7 @@
   background: radial-gradient(circle at 40% 35%, #1e2430, #050608 70%);
 }
 
+/* Status: time LEFT · signal / 5G / battery RIGHT */
 [data-era="ios"] .phone-status {
   color: #fff;
   background: transparent;
@@ -53,7 +54,7 @@
   font: 600 15px/1 -apple-system, BlinkMacSystemFont, sans-serif;
   letter-spacing: -0.02em;
   z-index: 4;
-  gap: 8px;
+  gap: 6px;
 }
 [data-era="ios"] .phone-time {
   order: 1;
@@ -64,17 +65,20 @@
   opacity: 1;
   width: auto;
   order: 2;
-  font-size: 0;
   margin: 0;
   display: inline-flex;
-  align-items: flex-end;
-  height: 12px;
+  align-items: center;
+  gap: 5px;
+  height: 14px;
   flex: 0 0 auto;
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.01em;
 }
 [data-era="ios"] .phone-carrier::before {
   content: "";
   display: block;
   width: 18px; height: 10px;
+  flex: 0 0 auto;
   background:
     linear-gradient(#fff, #fff) 0 100% / 3px 4px no-repeat,
     linear-gradient(#fff, #fff) 5px 100% / 3px 6px no-repeat,
@@ -90,24 +94,120 @@
   flex: 0 0 auto;
 }
 
+/* Depth wallpaper: gold → purple / charcoal silk waves (not solid charcoal) */
 [data-era="ios"] .phone-screen {
   color: #fff;
+  position: relative;
+  isolation: isolate;
   background:
-    radial-gradient(ellipse 90% 55% at 12% 18%, rgba(140, 90, 220, .55), transparent 55%),
-    radial-gradient(ellipse 80% 50% at 92% 12%, rgba(50, 110, 240, .5), transparent 50%),
-    radial-gradient(ellipse 70% 45% at 70% 78%, rgba(200, 70, 160, .38), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 20% 85%, rgba(40, 160, 200, .28), transparent 50%),
-    linear-gradient(165deg, #1a1040 0%, #0c1428 42%, #140818 100%);
+    radial-gradient(ellipse 95% 55% at 8% 8%, rgba(232, 190, 120, .62), transparent 52%),
+    radial-gradient(ellipse 70% 48% at 88% 18%, rgba(168, 120, 72, .42), transparent 55%),
+    radial-gradient(ellipse 85% 55% at 72% 72%, rgba(110, 70, 150, .48), transparent 58%),
+    radial-gradient(ellipse 75% 50% at 18% 88%, rgba(60, 40, 70, .55), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 50% 45%, rgba(90, 55, 120, .28), transparent 60%),
+    linear-gradient(168deg, #4a3824 0%, #2c2038 28%, #1a1424 58%, #100e14 100%);
 }
+[data-era="ios"] .phone-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 40% at 30% 35%, transparent 40%, rgba(20, 14, 28, .35) 70%, transparent 100%),
+    radial-gradient(ellipse 90% 35% at 80% 55%, rgba(200, 160, 90, .18), transparent 60%),
+    radial-gradient(ellipse 100% 30% at 40% 80%, rgba(80, 50, 110, .25), transparent 65%);
+  opacity: .95;
+}
+[data-era="ios"] .phone-screen > * { position: relative; z-index: 1; }
 
 [data-era="ios"] .phone-home {
-  padding: 4px 6px 0;
+  padding: 2px 4px 0;
   background: transparent;
 }
+
+/* Widgets row */
+[data-era="ios"] .phone-widgets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 6px 16px 14px;
+}
+[data-era="ios"] .phone-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+[data-era="ios"] .phone-widget-face {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 22px;
+  padding: 14px 14px 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.35),
+    0 1px 2px rgba(0,0,0,.2),
+    inset 0 1px 0 rgba(255,255,255,.18);
+  overflow: hidden;
+}
+[data-era="ios"] .phone-widget-weather .phone-widget-face {
+  background:
+    linear-gradient(160deg, #3a3a42 0%, #2a2a32 45%, #1e1e26 100%);
+  color: #fff;
+}
+[data-era="ios"] .phone-widget-cal .phone-widget-face {
+  background: #f5f5f7;
+  color: #1c1c1e;
+}
+[data-era="ios"] .pw-loc {
+  font: 600 13px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: .95;
+}
+[data-era="ios"] .pw-temp {
+  font: 300 52px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.04em;
+  margin-top: 4px;
+}
+[data-era="ios"] .pw-cond {
+  font: 500 13px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-top: auto;
+  opacity: .92;
+}
+[data-era="ios"] .pw-hl {
+  font: 500 12px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: .75;
+  margin-top: 2px;
+}
+[data-era="ios"] .pw-dow {
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #e54b4b;
+  letter-spacing: .04em;
+}
+[data-era="ios"] .pw-dom {
+  font: 300 56px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.04em;
+  color: #1c1c1e;
+  margin-top: 2px;
+}
+[data-era="ios"] .pw-events {
+  font: 500 13px/1.25 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #8e8e93;
+  margin-top: auto;
+}
+[data-era="ios"] .phone-widget-label {
+  font: 500 11px/1.15 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+
 [data-era="ios"] .phone-home-icons .phone-icons {
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px 8px;
-  padding: 14px 14px 0;
+  gap: 14px 8px;
+  padding: 4px 14px 0;
   justify-items: center;
   flex: 0 0 auto;
 }
@@ -122,6 +222,7 @@
 }
 [data-era="ios"] .phone-icon .label {
   font: 500 11px/1.15 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
   text-shadow: 0 1px 2px rgba(0,0,0,.45);
 }
 [data-era="ios"] .i-github .glyph-wrap,
@@ -130,19 +231,67 @@
 [data-era="ios"] .phone-pages {
   display: flex;
   margin-top: auto;
-  padding-top: 18px;
-  padding-bottom: 14px;
+  padding-top: 14px;
+  padding-bottom: 10px;
 }
+[data-era="ios"] .phone-pages span {
+  width: 7px; height: 7px;
+  background: rgba(255,255,255,.85);
+}
+
+/* Translucent Search pill (decorative) */
+[data-era="ios"] .phone-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: center;
+  width: min(168px, 48%);
+  margin: 0 auto 12px;
+  padding: 9px 18px;
+  border: 0.5px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.16);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  color: rgba(255,255,255,.92);
+  font: 500 15px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 10px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18);
+  cursor: default;
+}
+[data-era="ios"] .phone-search-ico {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 1.8px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  opacity: .9;
+  flex: 0 0 auto;
+}
+[data-era="ios"] .phone-search-ico::after {
+  content: "";
+  position: absolute;
+  width: 6px; height: 1.8px;
+  background: currentColor;
+  border-radius: 1px;
+  right: -4px; bottom: -1px;
+  transform: rotate(45deg);
+}
+
 [data-era="ios"] .phone-dock {
   display: flex;
-  background: rgba(255,255,255,.18);
-  backdrop-filter: blur(28px) saturate(160%);
-  -webkit-backdrop-filter: blur(28px) saturate(160%);
-  border: 0.5px solid rgba(255,255,255,.22);
-  box-shadow: 0 8px 24px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.2);
-  padding: 14px 16px;
-  margin: 0 12px 8px;
-  border-radius: 32px;
+  background: rgba(255,255,255,.2);
+  backdrop-filter: blur(32px) saturate(170%);
+  -webkit-backdrop-filter: blur(32px) saturate(170%);
+  border: 0.5px solid rgba(255,255,255,.28);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.32),
+    0 2px 6px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.28);
+  padding: 14px 18px;
+  margin: 0 14px 8px;
+  border-radius: 34px;
 }
 [data-era="ios"] .phone-dock .glyph-wrap {
   width: 58px; height: 58px; border-radius: 16px;

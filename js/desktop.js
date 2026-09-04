@@ -47,6 +47,7 @@
     $("#tm-track").setAttribute("aria-valuenow", String(eraIndex));
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
+    $("#tm-track").setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
     if (phoneMode) {
       closePhoneSheet();
@@ -250,7 +251,8 @@
       else if (id === "razr") carrier.textContent = "MOTOROLA";
       else if (id === "t28") carrier.textContent = "T28";
       else if (id === "gzone") carrier.textContent = "G'zOne";
-      else if (id === "ios" || id === "pixel" || id === "iphone") carrier.textContent = "";
+      else if (id === "ios") carrier.textContent = "5G";
+      else if (id === "pixel" || id === "iphone") carrier.textContent = "";
       else carrier.textContent = "Carrier";
     }
     if (lastPhoneClockText) {
@@ -277,17 +279,48 @@
           "<span class='phone-num'>" + (i + 1) + ".</span> " + app.name + "</button></li>";
       }).join("") + "</ul>";
     } else {
-      home.className = "phone-home phone-home-icons";
+      home.className = "phone-home phone-home-icons" + (id === "ios" ? " phone-home-ios" : "");
       var useDock = (id === "ios" || id === "pixel");
-      var gridApps = useDock ? SITE.apps.slice(4) : SITE.apps;
+      var isIos = id === "ios";
+      /* iOS: all SITE.apps in 4-col grid + dock(4). Pixel: Material grid without Apple widgets. */
+      var gridApps = isIos ? SITE.apps : (useDock ? SITE.apps.slice(4) : SITE.apps);
       var dockApps = useDock ? SITE.apps.slice(0, 4) : null;
       function iconBtn(app, dock) {
         return "<button type='button' class='phone-icon i-" + app.id + (dock ? " phone-dock-icon" : "") + "' data-app='" + app.id + "'>" +
           window.ICONS.wrap(app.id) + (dock ? "" : "<span class='label'>" + app.name + "</span>") + "</button>";
       }
-      var html = "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
+      var html = "";
+      if (isIos) {
+        var now = new Date();
+        var dow = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/Denver" }).format(now).toUpperCase();
+        var dom = new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone: "America/Denver" }).format(now);
+        html += "<div class='phone-widgets' aria-hidden='true'>" +
+          "<div class='phone-widget phone-widget-weather'>" +
+            "<div class='phone-widget-face'>" +
+              "<div class='pw-loc'>Denver</div>" +
+              "<div class='pw-temp'>72°</div>" +
+              "<div class='pw-cond'>Partly Cloudy</div>" +
+              "<div class='pw-hl'>H:78° L:55°</div>" +
+            "</div>" +
+            "<span class='phone-widget-label'>Weather</span>" +
+          "</div>" +
+          "<div class='phone-widget phone-widget-cal'>" +
+            "<div class='phone-widget-face'>" +
+              "<div class='pw-dow'>" + dow + "</div>" +
+              "<div class='pw-dom'>" + dom + "</div>" +
+              "<div class='pw-events'>No Events Today</div>" +
+            "</div>" +
+            "<span class='phone-widget-label'>Calendar</span>" +
+          "</div>" +
+        "</div>";
+      }
+      html += "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
       if (dockApps) {
-        html += "<div class='phone-pages' aria-hidden='true'><span class='on'></span><span></span></div>";
+        html += "<div class='phone-pages' aria-hidden='true'><span class='on'></span></div>";
+        if (isIos) {
+          html += "<button type='button' class='phone-search' aria-hidden='true' tabindex='-1'>" +
+            "<span class='phone-search-ico' aria-hidden='true'></span>Search</button>";
+        }
         html += "<div class='phone-dock'>" + dockApps.map(function (app) { return iconBtn(app, true); }).join("") + "</div>";
       }
       home.innerHTML = html;
@@ -633,6 +666,8 @@
     phoneMode = on;
     eras = activeEras();
     document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    var tmTrack = $("#tm-track");
+    if (tmTrack) tmTrack.setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     if (!phoneMode) document.documentElement.classList.remove("phone-feature", "phone-app-open");
     setPhoneVisibility(phoneMode);
     if (phoneMode) {
@@ -654,6 +689,8 @@
 
   function bindPhoneMode() {
     document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    var tmTrack0 = $("#tm-track");
+    if (tmTrack0) tmTrack0.setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     setPhoneVisibility(phoneMode);
     var onChange = function (e) { applyDeviceMode(e.matches); };
     if (phoneMq.addEventListener) phoneMq.addEventListener("change", onChange);

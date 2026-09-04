@@ -435,6 +435,10 @@ button, a { cursor: pointer; }
 .phone-dock .phone-icon .label { display: none; }
 .phone-dock .glyph-wrap { width: 56px; height: 56px; }
 
+.phone-widgets { display: none; }
+.phone-search { display: none; }
+.phone-home-ios .phone-widgets { display: grid; }
+.phone-home-ios .phone-search { display: flex; }
 
 /* Feature phones: softkeys own Back — avoid duplicate with sheet-bar */
 html.phone-feature .phone-back { display: none !important; }
@@ -505,15 +509,15 @@ html.phone-feature .phone-back { display: none !important; }
   :root:not([data-device="phone"]) .tm-line { left: 10px; right: 10px; }
 }
 
-/* Phone mode Time Machine — stacked, thumb-friendly (desktop .tm unchanged) */
-[data-device="phone"] { --tm: 102px; }
+/* Phone mode Time Machine — title above, full-width thumb-first slider (desktop .tm unchanged) */
+[data-device="phone"] { --tm: 118px; }
 [data-device="phone"] .tm {
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
   height: var(--tm);
-  gap: 6px;
-  padding: 10px 14px 14px;
+  gap: 4px;
+  padding: 10px 6px 12px;
 }
 [data-device="phone"] .tm-title {
   flex: 0 0 auto;
@@ -521,6 +525,7 @@ html.phone-feature .phone-back { display: none !important; }
   align-items: baseline;
   gap: 10px;
   width: 100%;
+  padding: 0 6px;
 }
 [data-device="phone"] .tm-word {
   flex: 0 0 auto;
@@ -529,27 +534,28 @@ html.phone-feature .phone-back { display: none !important; }
   color: #c4b89a;
 }
 [data-device="phone"] .tm-title strong {
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.1;
   color: #fff4d5;
 }
 [data-device="phone"] .tm-track {
   flex: 0 0 auto;
   width: 100%;
-  height: 52px;
+  height: 58px;
 }
 [data-device="phone"] .tm-line {
-  left: 18px; right: 18px; top: 18px; height: 3px;
+  left: 16px; right: 16px; top: 20px; height: 4px;
   border-radius: 2px;
 }
 [data-device="phone"] .tm-tick {
-  font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+  font: 600 12.5px/1.15 ui-sans-serif, system-ui, sans-serif;
   color: #9a9080;
 }
 [data-device="phone"] .tm-tick i {
-  width: 12px; height: 12px; margin: 12px 0 8px;
+  width: 12px; height: 12px; margin: 14px 0 8px;
 }
 [data-device="phone"] .tm-handle {
-  top: 8px; width: 28px; height: 28px;
-  margin-left: -14px;
+  top: 6px; width: 34px; height: 34px;
+  margin-left: -17px;
+  box-shadow: 0 0 0 1px #000, 0 3px 10px rgba(0,0,0,.55);
 }
