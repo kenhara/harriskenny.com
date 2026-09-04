@@ -126,7 +126,7 @@
   background: transparent;
 }
 
-/* Widgets: Weather + Calendar row; Agentforce medium under them */
+/* Widgets: Weather + Calendar + Agentforce as equal square tiles */
 [data-era="ios"] .phone-widgets {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -155,8 +155,6 @@
   overflow: hidden;
 }
 [data-era="ios"] .phone-widget-agentforce {
-  grid-column: 1 / -1;
-  width: 100%;
   border: 0;
   background: transparent;
   padding: 0;
@@ -166,7 +164,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 [data-era="ios"] .phone-widget-agentforce .phone-widget-face {
-  aspect-ratio: 2.15 / 1;
+  aspect-ratio: 1 / 1;
   padding: 0;
   background: #fff;
   color: #032d60;
@@ -178,20 +176,20 @@
 [data-era="ios"] .pw-af-head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex: 0 0 auto;
-  padding: 10px 14px;
+  padding: 10px 12px;
   background: #eef2ff;
   border-bottom: 0.5px solid rgba(3, 45, 96, .08);
 }
 [data-era="ios"] .pw-af-mascot {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   flex: 0 0 auto;
   display: block;
 }
 [data-era="ios"] .pw-af-title {
-  font: 700 14px/1.1 -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font: 700 13px/1.1 -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
   color: #032d60;
   letter-spacing: -0.01em;
 }
@@ -200,13 +198,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  padding: 10px 12px 14px;
+  gap: 16px;
+  padding: 12px 10px 14px;
   background: #fff;
 }
 [data-era="ios"] .pw-af-btn {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #f2f2f7;
   display: inline-flex;
