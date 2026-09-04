@@ -171,15 +171,20 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start; /* left edge under Calendar */
   gap: 10px;
   padding: 0 0 2px;
   min-width: 0;
 }
 [data-era="ios"] .phone-widget-side .phone-icon {
-  flex: 1 1 0;
-  justify-content: center;
-  width: 100%;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+}
+[data-era="ios"] .phone-widget-side .phone-icon .label {
+  text-align: center;
+  width: 60px; /* match glyph so label sits under icon, not drifting */
 }
 [data-era="ios"] .phone-icons-empty {
   display: none !important;
