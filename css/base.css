@@ -211,7 +211,8 @@ button, a { cursor: pointer; }
 .folder .glyph { width: 24px; height: 24px; flex: 0 0 24px; image-rendering: pixelated; }
 .folder b { display: block; font-size: 13px; }
 .folder em { display: block; font-style: normal; font-size: 11px; opacity: .72; }
-.menubar, .panel-top, .taskbar, .dock, .start-menu { display: none; }
+.menubar, .panel-top, .taskbar, .dock, .start-menu, .go-menu { display: none; }
+.widget-back { display: none; order: 0; }
 
 .window.zoomed { inset: 8px !important; max-width: none; }
 .tasks { display: flex; gap: 3px; flex: 1; min-width: 0; }

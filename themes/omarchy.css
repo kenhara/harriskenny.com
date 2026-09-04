@@ -2,18 +2,18 @@
 [data-era="omarchy"] .os { background: #0f1115; color: #c8cdd8; }
 [data-era="omarchy"] .desktop {
   background-color: #111318;
-  background-image: url("../wallpapers/omarchy.jpg?v=1788464000");
+  background-image: url("../wallpapers/omarchy.jpg?v=1788481000");
   background-size: cover;
   background-position: center;
 }
 [data-era="omarchy"] .icon { color: #d7dbe3; }
-[data-era="omarchy"] .window { background: #1a1d24; border: 1px solid #2a303a; color: #d7dbe3; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
-[data-era="omarchy"] .titlebar { height: 28px; padding: 0 10px; background: #15181e; color: #c8cdd8; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; --widget-gap: 8px; }
+[data-era="omarchy"] .window { background: #1a1d24; border: 1px solid #3a3f4a; color: #d7dbe3; box-shadow: 0 16px 40px rgba(0,0,0,.55); border-radius: 10px; overflow: hidden; }
+[data-era="omarchy"] .titlebar { height: 32px; padding: 0 10px; background: #15181e; color: #c8cdd8; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px; --widget-gap: 8px; cursor: default; }
 [data-era="omarchy"] .widget { width: 16px; height: 16px; background: #2a303a; border: 0; color: #aaa; }
 [data-era="omarchy"] .pane { background: #1a1d24; }
 [data-era="omarchy"] .btn { background: #7CA4F4; color: #0c0e12; border: 0; border-radius: 2px; font-weight: 600; }
 [data-era="omarchy"] .panel-top {
-  display: flex; height: 28px; padding: 0 12px; align-items: center; gap: 18px;
+  display: flex; height: 28px; padding: 0 12px; align-items: center; gap: 12px;
   background: #0c0e12; color: #9aa3b2; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 12px;
   border-bottom: 1px solid #222;
 }
@@ -27,22 +27,83 @@
 [data-era="omarchy"] .panel-logo {
   display: block; width: 16px; height: 16px;
   object-fit: contain;
-  /* Omarchy green mark on dark bar */
   filter: brightness(0) saturate(100%) invert(72%) sepia(42%) saturate(487%) hue-rotate(47deg) brightness(96%) contrast(90%);
 }
-[data-era="omarchy"] .panel-top { gap: 12px; }
-[data-era="omarchy"] .window {
-  border-radius: 8px; overflow: hidden;
+
+/* Desktop icons hide; Go menu is the launcher. */
+[data-era="omarchy"] .board { display: none; }
+
+[data-era="omarchy"] .go-menu {
+  display: none;
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  width: min(300px, 88vw);
+  padding: 10px 0 8px;
+  background: rgba(22, 24, 30, 0.94);
+  border: 1px solid #9aa0ad;
+  border-radius: 10px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.55);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  color: #e6e8ee;
+  backdrop-filter: blur(8px);
 }
-[data-era="omarchy"] .window.hypr {
-  max-width: none; min-width: 0;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.45);
+[data-era="omarchy"] .go-menu.open { display: block; }
+[data-era="omarchy"] .go-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 10px 10px; border-bottom: 1px solid #2a303a;
 }
-[data-era="omarchy"] .window.hypr .pane { flex: 1 1 auto; overflow: auto; }
-[data-era="omarchy"] .titlebar { cursor: default; }
+[data-era="omarchy"] .go-tab {
+  flex: 0 0 auto; padding: 4px 10px;
+  background: #6c5ce7; color: #fff; border-radius: 6px 6px 0 0;
+  font-weight: 700; font-size: 12px;
+}
+[data-era="omarchy"] .go-filter {
+  flex: 1 1 auto; min-width: 0;
+  height: 28px; padding: 0 10px;
+  background: #0c0e12; color: #c8cdd8;
+  border: 1px solid #2a303a; border-radius: 6px;
+  font: inherit; outline: none;
+}
+[data-era="omarchy"] .go-filter:focus { border-color: #7CA4F4; }
+[data-era="omarchy"] .go-list { list-style: none; margin: 6px 0 0; padding: 0 6px; }
+[data-era="omarchy"] .go-list li { margin: 0; }
+[data-era="omarchy"] .go-item {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 8px 10px;
+  background: transparent; border: 0; border-radius: 6px;
+  color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+[data-era="omarchy"] .go-item:hover,
+[data-era="omarchy"] .go-item:focus-visible {
+  background: rgba(124, 164, 244, 0.16); outline: none;
+}
+[data-era="omarchy"] .go-item .glyph-wrap {
+  width: 22px; height: 22px; flex: 0 0 22px;
+  border-radius: 4px; outline: none; background: #111;
+}
+[data-era="omarchy"] .go-item .glyph { width: 18px; height: 18px; }
+[data-era="omarchy"] .go-item .dos-file { display: none; }
+[data-era="omarchy"] .go-item span { font-size: 13px; }
+[data-era="omarchy"] .go-hint {
+  margin: 8px 12px 0; font-size: 10px; color: #6b7280; text-align: right;
+}
+
+/* Centered popup windows (not full-bleed tiles). */
+[data-era="omarchy"] .window.omarchy-pop {
+  max-width: min(92vw, 440px);
+  box-shadow: 0 0 0 1px rgba(154,160,173,.35), 0 18px 48px rgba(0,0,0,.55);
+}
 [data-era="omarchy"] .widget-shade,
 [data-era="omarchy"] .widget-zoom,
 [data-era="omarchy"] .widget-close { display: none; }
+[data-era="omarchy"] .widget-back {
+  display: inline-grid; order: 0;
+  width: 26px; height: 22px; padding: 0;
+  font: 700 14px/22px "JetBrains Mono", ui-monospace, monospace;
+  background: #2a303a; color: #c8cdd8; border-radius: 3px;
+}
+[data-era="omarchy"] .widget-back:hover { background: #7CA4F4; color: #0c0e12; }
 [data-era="omarchy"] .widget-exit {
   display: inline-grid; order: 5;
   width: auto; height: 22px; padding: 0 10px;

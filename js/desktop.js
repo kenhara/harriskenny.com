@@ -37,7 +37,7 @@
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
-    layoutWindows();
+    syncOmarchyChrome();
     renderTasks();
     if (fromUi) {
       try { history.replaceState(null, "", "?era=" + era.id + location.hash); } catch (e) {}
@@ -89,34 +89,32 @@
     });
   }
 
-  function openApp(id) {
-    var win = $(".window[data-win='" + id + "']");
-    if (!win) return;
-    win.classList.add("open", "front");
-    win.style.zIndex = String(++z);
-    $all(".window").forEach(function (w) { if (w !== win) w.classList.remove("front"); });
-    $all(".icon").forEach(function (ic) {
-      ic.classList.toggle("active", ic.getAttribute("data-app") === id);
-    });
-    layoutWindows();
-    renderTasks();
-  }
-
-  function closeApp(id) {
-    var win = $(".window[data-win='" + id + "']");
-    if (win) win.classList.remove("open", "front", "zoomed", "hypr");
-    layoutWindows();
-    renderTasks();
-  }
-
   function isOmarchy() { return currentEra().id === "omarchy"; }
 
-  /* Hyprland-style: open windows fill the desktop with gaps, no floating cascade. */
-  function layoutWindows() {
-    var open = $all(".window.open");
+  function goMenuEl() { return $("#go-menu"); }
+
+  function showGoMenu(on) {
+    var go = goMenuEl();
+    if (!go) return;
     if (!isOmarchy()) {
-      open.forEach(function (w) {
-        w.classList.remove("hypr");
+      go.hidden = true;
+      go.classList.remove("open");
+      return;
+    }
+    if (on) {
+      go.hidden = false;
+      go.classList.add("open");
+    } else {
+      go.classList.remove("open");
+      go.hidden = true;
+    }
+  }
+
+  function syncOmarchyChrome() {
+    if (!isOmarchy()) {
+      showGoMenu(false);
+      $all(".window").forEach(function (w) {
+        w.classList.remove("hypr", "omarchy-pop");
         if (w.dataset.homeTop) w.style.top = w.dataset.homeTop;
         if (w.dataset.homeLeft) w.style.left = w.dataset.homeLeft;
         w.style.right = "";
@@ -124,29 +122,74 @@
         w.style.width = "";
         w.style.height = "";
         w.style.maxWidth = "";
+        w.style.transform = "";
       });
       return;
     }
-    var gap = 10;
-    var n = open.length;
-    open.forEach(function (w, i) {
-      w.classList.add("hypr");
-      w.classList.remove("zoomed");
-      w.style.top = gap + "px";
-      w.style.bottom = gap + "px";
-      w.style.height = "auto";
-      w.style.maxWidth = "none";
-      if (n <= 1) {
-        w.style.left = gap + "px";
-        w.style.right = gap + "px";
-        w.style.width = "auto";
-      } else {
-        var pct = 100 / n;
-        w.style.left = "calc(" + (i * pct) + "% + " + (gap / 2) + "px)";
-        w.style.width = "calc(" + pct + "% - " + gap + "px)";
-        w.style.right = "auto";
-      }
+    var open = $all(".window.open");
+    if (open.length) {
+      showGoMenu(false);
+      open.forEach(function (w) { placeOmarchyPop(w); });
+    } else {
+      showGoMenu(true);
+    }
+  }
+
+  function placeOmarchyPop(win) {
+    var app = SITE.apps.find(function (a) { return a.id === win.getAttribute("data-win"); });
+    var wide = app && app.kind === "folder";
+    var about = app && app.kind === "about";
+    var w = wide ? 440 : (about ? 380 : 360);
+    win.classList.add("omarchy-pop");
+    win.classList.remove("hypr", "zoomed");
+    win.style.width = w + "px";
+    win.style.maxWidth = "min(92vw, " + w + "px)";
+    win.style.height = "auto";
+    win.style.left = "50%";
+    win.style.top = "50%";
+    win.style.right = "auto";
+    win.style.bottom = "auto";
+    win.style.transform = "translate(-50%, -50%)";
+  }
+
+  function openApp(id) {
+    var win = $(".window[data-win='" + id + "']");
+    if (!win) return;
+    /* Omarchy: one centered popup at a time, Go menu hides. */
+    if (isOmarchy()) {
+      $all(".window.open").forEach(function (w) {
+        if (w !== win) w.classList.remove("open", "front", "omarchy-pop");
+      });
+    }
+    win.classList.add("open", "front");
+    win.style.zIndex = String(++z);
+    $all(".window").forEach(function (w) { if (w !== win) w.classList.remove("front"); });
+    $all(".icon").forEach(function (ic) {
+      ic.classList.toggle("active", ic.getAttribute("data-app") === id);
     });
+    syncOmarchyChrome();
+    renderTasks();
+  }
+
+  function closeApp(id) {
+    var win = $(".window[data-win='" + id + "']");
+    if (win) win.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop");
+    if (win) {
+      win.style.transform = "";
+      win.style.width = "";
+      win.style.maxWidth = "";
+      if (win.dataset.homeTop) win.style.top = win.dataset.homeTop;
+      if (win.dataset.homeLeft) win.style.left = win.dataset.homeLeft;
+    }
+    syncOmarchyChrome();
+    renderTasks();
+  }
+
+  function backToGo() {
+    $all(".window.open").forEach(function (w) {
+      closeApp(w.getAttribute("data-win"));
+    });
+    showGoMenu(true);
   }
 
   /* Menubar vs top-panel HTML; visibility is in the era stylesheet. */
@@ -208,6 +251,27 @@
         window.ICONS.wrap(app.id) + "<span class='label'>" + app.name + "</span></button>";
     }).join("");
 
+    var go = goMenuEl();
+    if (go) {
+      go.innerHTML =
+        "<div class='go-head'><span class='go-tab'>Go</span>" +
+        "<input class='go-filter' type='search' placeholder='Filter…' aria-label='Filter' autocomplete='off'></div>" +
+        "<ul class='go-list'>" + SITE.apps.map(function (app) {
+          return "<li><button type='button' class='go-item' data-app='" + app.id + "'>" +
+            window.ICONS.wrap(app.id) + "<span>" + app.name + "</span></button></li>";
+        }).join("") + "</ul>" +
+        "<p class='go-hint'>Super · Esc</p>";
+      var filter = $(".go-filter", go);
+      if (filter) filter.addEventListener("input", function () {
+        var q = filter.value.trim().toLowerCase();
+        $all(".go-item", go).forEach(function (btn) {
+          var name = (btn.textContent || "").toLowerCase();
+          btn.parentElement.hidden = q && name.indexOf(q) === -1;
+        });
+      });
+      filter && filter.addEventListener("keydown", function (e) { e.stopPropagation(); });
+    }
+
     if (dock) {
       dock.innerHTML = SITE.apps.map(function (app) {
         return "<button type='button' class='icon i-" + app.id + "' data-app='" + app.id + "'>" + window.ICONS.wrap(app.id) + "</button>";
@@ -220,6 +284,7 @@
       var left = (140 + i * 14) + "px";
       return "<section class='window" + wide + "' data-win='" + app.id + "' data-home-top='" + top + "' data-home-left='" + left + "' style='top:" + top + ";left:" + left + "'>" +
         "<div class='titlebar' data-drag='" + app.id + "'>" +
+        "<button class='widget widget-back' type='button' data-act='back' aria-label='Back to Go'>←</button>" +
         "<button class='widget widget-close' type='button' data-act='close' aria-label='Close'></button>" +
         "<span class='title'>" + app.windowTitle + "</span>" +
         "<button class='widget widget-shade' type='button' data-act='min' aria-label='Minimize'></button>" +
@@ -249,7 +314,11 @@
           e.stopPropagation();
           var act = btn.getAttribute("data-act");
           var id = win.getAttribute("data-win");
-          if (act === "close" || act === "min") closeApp(id);
+          if (act === "back") { backToGo(); return; }
+          if (act === "close" || act === "min") {
+            if (isOmarchy()) backToGo();
+            else closeApp(id);
+          }
           if (act === "zoom") win.classList.toggle("zoomed");
         });
       });
@@ -329,9 +398,22 @@
   }
 
   document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape" || !isOmarchy()) return;
-    var front = $(".window.open.front") || $(".window.open");
-    if (front) closeApp(front.getAttribute("data-win"));
+    if (!isOmarchy()) return;
+    if (e.key === "Escape") {
+      if ($(".window.open")) { e.preventDefault(); backToGo(); return; }
+      var go = goMenuEl();
+      if (go && !go.hidden) { /* keep menu; Esc on empty desktop is fine */ }
+      return;
+    }
+    /* Super / Meta toggles the Go menu (Omarchy habit). */
+    if (e.key === "Meta" || e.key === "OS" || e.code === "MetaLeft" || e.code === "MetaRight") {
+      e.preventDefault();
+      if ($(".window.open")) { backToGo(); return; }
+      var go = goMenuEl();
+      if (!go) return;
+      if (go.hidden || !go.classList.contains("open")) showGoMenu(true);
+      else showGoMenu(false);
+    }
   });
 
   render();
