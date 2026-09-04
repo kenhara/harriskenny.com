@@ -282,11 +282,12 @@
       home.className = "phone-home phone-home-icons" + (id === "ios" ? " phone-home-ios" : "");
       var useDock = (id === "ios" || id === "pixel");
       var isIos = id === "ios";
-      /* iOS Harris lock: LinkedIn + X in grid; dock keeps first 4. Pixel unchanged. */
-      var gridApps = isIos
-        ? SITE.apps.filter(function (a) { return a.id === "linkedin" || a.id === "x"; })
-        : (useDock ? SITE.apps.slice(4) : SITE.apps);
+      /* iOS: Weather|Calendar; Agentforce 2x2 left with LinkedIn+X stacked right. Dock = first 4. */
+      var gridApps = isIos ? [] : (useDock ? SITE.apps.slice(4) : SITE.apps);
       var dockApps = useDock ? SITE.apps.slice(0, 4) : null;
+      var sideApps = isIos
+        ? SITE.apps.filter(function (a) { return a.id === "linkedin" || a.id === "x"; })
+        : [];
       function iconBtn(app, dock) {
         return "<button type='button' class='phone-icon i-" + app.id + (dock ? " phone-dock-icon" : "") + "' data-app='" + app.id + "'>" +
           window.ICONS.wrap(app.id) + (dock ? "" : "<span class='label'>" + app.name + "</span>") + "</button>";
@@ -314,22 +315,29 @@
             "</div>" +
             "<span class='phone-widget-label'>Calendar</span>" +
           "</div>" +
-          "<button type='button' class='phone-widget phone-widget-agentforce' data-app='outboundsync' aria-label='Agentforce'>" +
-            "<div class='phone-widget-face'>" +
-              "<div class='pw-af-head'>" +
-                "<svg class='pw-af-mascot' viewBox='0 0 24 24' width='22' height='22' aria-hidden='true'><circle cx='12' cy='12' r='12' fill='#032d60'/><path d='M4.5 10.2c1.2-1.4 2.8-2.1 4.3-2.1s3.1.7 4.2 2.1c1.1-1.4 2.7-2.1 4.2-2.1 1.5 0 3.1.7 4.3 2.1v.4c-1.1 1.2-2.6 1.9-4.3 1.9-1.5 0-2.9-.6-4-1.6-1.1 1-2.5 1.6-4 1.6-1.7 0-3.2-.7-4.3-1.9v-.4z' fill='#0a2540'/><rect x='5.2' y='9.3' width='5.2' height='3.2' rx='1.2' fill='#0b1f3a' stroke='#7eb6ff' stroke-width='.7'/><rect x='13.6' y='9.3' width='5.2' height='3.2' rx='1.2' fill='#0b1f3a' stroke='#7eb6ff' stroke-width='.7'/><path d='M10.4 10.9h3.2' stroke='#7eb6ff' stroke-width='1' stroke-linecap='round'/><path d='M9 15.2c1.1 1.1 4.9 1.1 6 0' fill='none' stroke='#7eb6ff' stroke-width='1.2' stroke-linecap='round'/></svg>" +
-                "<span class='pw-af-title'>Agentforce</span>" +
+          "<div class='phone-widget-band'>" +
+            "<button type='button' class='phone-widget phone-widget-agentforce' data-app='outboundsync' aria-label='Agentforce'>" +
+              "<div class='phone-widget-face'>" +
+                "<div class='pw-af-head'>" +
+                  "<svg class='pw-af-mascot' viewBox='0 0 24 24' width='22' height='22' aria-hidden='true'><circle cx='12' cy='12' r='12' fill='#032d60'/><path d='M4.5 10.2c1.2-1.4 2.8-2.1 4.3-2.1s3.1.7 4.2 2.1c1.1-1.4 2.7-2.1 4.2-2.1 1.5 0 3.1.7 4.3 2.1v.4c-1.1 1.2-2.6 1.9-4.3 1.9-1.5 0-2.9-.6-4-1.6-1.1 1-2.5 1.6-4 1.6-1.7 0-3.2-.7-4.3-1.9v-.4z' fill='#0a2540'/><rect x='5.2' y='9.3' width='5.2' height='3.2' rx='1.2' fill='#0b1f3a' stroke='#7eb6ff' stroke-width='.7'/><rect x='13.6' y='9.3' width='5.2' height='3.2' rx='1.2' fill='#0b1f3a' stroke='#7eb6ff' stroke-width='.7'/><path d='M10.4 10.9h3.2' stroke='#7eb6ff' stroke-width='1' stroke-linecap='round'/><path d='M9 15.2c1.1 1.1 4.9 1.1 6 0' fill='none' stroke='#7eb6ff' stroke-width='1.2' stroke-linecap='round'/></svg>" +
+                  "<span class='pw-af-title'>Agentforce</span>" +
+                "</div>" +
+                "<div class='pw-af-actions' aria-hidden='true'>" +
+                  "<span class='pw-af-btn pw-af-kb'><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><rect x='3' y='7' width='18' height='11' rx='2' fill='none' stroke='#032d60' stroke-width='1.7'/><path d='M6 10h2M10 10h2M14 10h2M18 10h.01M6 13h2M10 13h2M14 13h2M18 13h.01M8 16h8' stroke='#032d60' stroke-width='1.5' stroke-linecap='round'/></svg></span>" +
+                  "<span class='pw-af-btn pw-af-mic'><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><rect x='9' y='3.5' width='6' height='10' rx='3' fill='#032d60'/><path d='M6.5 11.5a5.5 5.5 0 0 0 11 0' fill='none' stroke='#032d60' stroke-width='1.7' stroke-linecap='round'/><path d='M12 17v3.2M9.5 20.5h5' stroke='#032d60' stroke-width='1.7' stroke-linecap='round'/></svg></span>" +
+                "</div>" +
               "</div>" +
-              "<div class='pw-af-actions' aria-hidden='true'>" +
-                "<span class='pw-af-btn pw-af-kb'><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><rect x='3' y='7' width='18' height='11' rx='2' fill='none' stroke='#032d60' stroke-width='1.7'/><path d='M6 10h2M10 10h2M14 10h2M18 10h.01M6 13h2M10 13h2M14 13h2M18 13h.01M8 16h8' stroke='#032d60' stroke-width='1.5' stroke-linecap='round'/></svg></span>" +
-                "<span class='pw-af-btn pw-af-mic'><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><rect x='9' y='3.5' width='6' height='10' rx='3' fill='#032d60'/><path d='M6.5 11.5a5.5 5.5 0 0 0 11 0' fill='none' stroke='#032d60' stroke-width='1.7' stroke-linecap='round'/><path d='M12 17v3.2M9.5 20.5h5' stroke='#032d60' stroke-width='1.7' stroke-linecap='round'/></svg></span>" +
-              "</div>" +
-            "</div>" +
-            "<span class='phone-widget-label'>Agentforce</span>" +
-          "</button>" +
+              "<span class='phone-widget-label'>Agentforce</span>" +
+            "</button>" +
+            "<div class='phone-widget-side'>" + sideApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>" +
+          "</div>" +
         "</div>";
       }
-      html += "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
+      if (!isIos) {
+        html += "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
+      } else {
+        html += "<div class='phone-icons phone-icons-empty' aria-hidden='true'></div>";
+      }
       if (dockApps) {
         html += "<div class='phone-pages' aria-hidden='true'><span class='on'></span></div>";
         if (isIos) {

@@ -154,6 +154,37 @@
     inset 0 1px 0 rgba(255,255,255,.18);
   overflow: hidden;
 }
+
+/* Agentforce 2x2 left; LinkedIn + X stacked on the right (iOS placement) */
+[data-era="ios"] .phone-widget-band {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
+}
+[data-era="ios"] .phone-widget-band .phone-widget-agentforce {
+  width: 100%;
+}
+[data-era="ios"] .phone-widget-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 0 0 2px;
+  min-width: 0;
+}
+[data-era="ios"] .phone-widget-side .phone-icon {
+  flex: 1 1 0;
+  justify-content: center;
+  width: 100%;
+}
+[data-era="ios"] .phone-icons-empty {
+  display: none !important;
+}
+
 [data-era="ios"] .phone-widget-agentforce {
   border: 0;
   background: transparent;
