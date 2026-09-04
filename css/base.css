@@ -241,6 +241,11 @@ button, a { cursor: pointer; }
   border-color: #fff #000 #000 #fff;
   box-shadow: 1px 1px 0 #000;
 }
+[data-era="win31"] .i-github .glyph-wrap,
+[data-era="win31"] .i-omarchy .glyph-wrap {
+  background: #000;
+  border-color: #fff #000 #000 #fff;
+}
 [data-era="win31"] .glyph-photo { width: 28px; height: 28px; }
 
 [data-era="win95"] .glyph-wrap { filter: drop-shadow(1px 1px 0 #000); }
