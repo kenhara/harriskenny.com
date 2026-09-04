@@ -1,14 +1,24 @@
 (function () {
   var SITE = window.SITE;
-  var eras = SITE.eras;
+  var phoneMq = window.matchMedia("(max-width: " + SITE.phoneBreakpoint + "px)");
+  var phoneMode = phoneMq.matches;
+  var eras = phoneMode ? SITE.phoneEras : SITE.eras;
   var eraIndex = 0;
   var z = 8;
   var tmDrag = false;
+  var phoneOpenId = null;
+  var phoneFocus = 0;
+  var FEATURE = { t28: 1, nokia3310: 1, razr: 1, gzone: 1 };
 
   function $(sel, el) { return (el || document).querySelector(sel); }
   function $all(sel, el) { return [].slice.call((el || document).querySelectorAll(sel)); }
 
   function currentEra() { return eras[eraIndex]; }
+  function isFeaturePhone() { return phoneMode && !!FEATURE[currentEra().id]; }
+  function isSmartPhone() { return phoneMode && !FEATURE[currentEra().id]; }
+
+  function activeEras() { return phoneMode ? SITE.phoneEras : SITE.eras; }
+  function defaultEraId() { return phoneMode ? SITE.defaultPhoneEra : SITE.defaultEra; }
 
   /* Visual paint only — no eraIndex / history. Hover preview and commit both use this. */
   function paintEra(i) {
@@ -26,7 +36,8 @@
       handle.style.left = (r.left + r.width / 2 - tr.left) + "px";
     }
     ticks.forEach(function (t, n) { t.classList.toggle("on", n === idx); });
-    paintChrome(era.id);
+    if (!phoneMode) paintChrome(era.id);
+    else paintPhoneChrome(era.id);
   }
 
   function applyEra(i, fromUi) {
@@ -37,8 +48,14 @@
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
-    syncLauncherChrome();
-    renderTasks();
+    if (phoneMode) {
+      closePhoneSheet();
+      renderPhoneHome();
+      syncPhoneSoftkeys();
+    } else {
+      syncLauncherChrome();
+      renderTasks();
+    }
     if (fromUi) {
       try { history.replaceState(null, "", "?era=" + era.id + location.hash); } catch (e) {}
     }
@@ -89,8 +106,8 @@
     });
   }
 
-  function isOmarchy() { return currentEra().id === "omarchy"; }
-  function isPopos() { return currentEra().id === "popos"; }
+  function isOmarchy() { return !phoneMode && currentEra().id === "omarchy"; }
+  function isPopos() { return !phoneMode && currentEra().id === "popos"; }
   function usesLauncher() { return isOmarchy() || isPopos(); }
 
   function goMenuEl() { return $("#go-menu"); }
@@ -170,7 +187,158 @@
     win.style.transform = "translate(-50%, -50%)";
   }
 
+  /* —— Phone shell —— */
+  function closePhoneSheet() {
+    phoneOpenId = null;
+    var sheet = $("#phone-sheet");
+    if (sheet) sheet.hidden = true;
+    var home = $("#phone-home");
+    if (home) home.hidden = false;
+    syncPhoneSoftkeys();
+  }
+
+  function openPhoneSheet(id) {
+    var app = SITE.apps.find(function (a) { return a.id === id; });
+    if (!app) return;
+    phoneOpenId = id;
+    var sheet = $("#phone-sheet");
+    var home = $("#phone-home");
+    var title = $("#phone-sheet-title");
+    var body = $("#phone-sheet-body");
+    if (home) home.hidden = true;
+    if (sheet) sheet.hidden = false;
+    if (title) title.textContent = app.windowTitle;
+    if (body) body.innerHTML = paneFor(app);
+    syncPhoneSoftkeys();
+  }
+
+  function syncPhoneSoftkeys() {
+    var sk = $("#phone-softkeys");
+    var id = currentEra().id;
+    var open = !!phoneOpenId;
+    document.documentElement.classList.toggle("phone-app-open", open);
+    if (!sk) return;
+    var l = $("#phone-sk-l"), c = $("#phone-sk-c"), r = $("#phone-sk-r");
+    if (id === "nokia3310") {
+      l.textContent = open ? "Back" : "";
+      c.textContent = open ? "Select" : "Menu";
+      r.textContent = "";
+    } else if (id === "razr") {
+      l.textContent = open ? "Back" : "Phonebook";
+      c.textContent = open ? "OK" : "";
+      r.textContent = open ? "" : "Media";
+    } else if (id === "t28") {
+      l.textContent = open ? "Back" : "Names";
+      c.textContent = open ? "Select" : "Menu";
+      r.textContent = open ? "" : "";
+    } else if (id === "gzone") {
+      l.textContent = open ? "Back" : "Back";
+      c.textContent = open ? "Select" : "Select";
+      r.textContent = "";
+    } else {
+      l.textContent = "Back";
+      c.textContent = "Select";
+      r.textContent = "";
+    }
+  }
+
+  function paintPhoneChrome(id) {
+    var carrier = $("#phone-carrier");
+    if (carrier) {
+      if (id === "nokia3310") carrier.textContent = "NOKIA";
+      else if (id === "razr") carrier.textContent = "MOTOROLA";
+      else if (id === "t28") carrier.textContent = "T28";
+      else if (id === "gzone") carrier.textContent = "G'zOne";
+      else if (id === "pixel") carrier.textContent = "";
+      else carrier.textContent = "Carrier";
+    }
+    if (lastPhoneClockText) {
+      $all("#phone-time").forEach(function (n) { n.textContent = lastPhoneClockText; });
+    }
+  }
+
+  function renderPhoneHome() {
+    var home = $("#phone-home");
+    if (!home) return;
+    var id = currentEra().id;
+    phoneFocus = Math.min(phoneFocus, SITE.apps.length - 1);
+    if (id === "gzone") {
+      home.className = "phone-home phone-home-grid";
+      home.innerHTML = "<div class='phone-grid'>" + SITE.apps.map(function (app, i) {
+        return "<button type='button' class='phone-grid-item" + (i === phoneFocus ? " focus" : "") + "' data-app='" + app.id + "' data-i='" + i + "'>" +
+          window.ICONS.wrap(app.id) + "<span class='label'>" + app.name + "</span></button>";
+      }).join("") + "</div>";
+    } else if (FEATURE[id]) {
+      home.className = "phone-home phone-home-list";
+      home.innerHTML = "<ul class='phone-list'>" + SITE.apps.map(function (app, i) {
+        return "<li class='phone-list-item" + (i === phoneFocus ? " focus" : "") + "' data-app='" + app.id + "' data-i='" + i + "'>" +
+          "<button type='button' data-app='" + app.id + "'>" +
+          "<span class='phone-num'>" + (i + 1) + ".</span> " + app.name + "</button></li>";
+      }).join("") + "</ul>";
+    } else {
+      home.className = "phone-home phone-home-icons";
+      home.innerHTML = "<div class='phone-icons'>" + SITE.apps.map(function (app) {
+        return "<button type='button' class='phone-icon i-" + app.id + "' data-app='" + app.id + "'>" +
+          window.ICONS.wrap(app.id) + "<span class='label'>" + app.name + "</span></button>";
+      }).join("") + "</div>";
+    }
+    home.hidden = !!phoneOpenId;
+    $all("[data-app]", home).forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var appId = el.getAttribute("data-app");
+        var i = Number(el.getAttribute("data-i"));
+        if (!isNaN(i)) phoneFocus = i;
+        if (isFeaturePhone() && !phoneOpenId) {
+          phoneFocus = SITE.apps.findIndex(function (a) { return a.id === appId; });
+          renderPhoneHome();
+          openPhoneSheet(appId);
+        } else {
+          openApp(appId);
+        }
+      });
+    });
+  }
+
+  function bindPhoneChrome() {
+    var back = $("#phone-back");
+    var homeBtn = $("#phone-home-btn");
+    var skL = $("#phone-sk-l");
+    var skC = $("#phone-sk-c");
+    var skR = $("#phone-sk-r");
+    function goBack() {
+      if (phoneOpenId) closePhoneSheet();
+    }
+    function doSelect() {
+      if (phoneOpenId) return;
+      var app = SITE.apps[phoneFocus];
+      if (app) openPhoneSheet(app.id);
+    }
+    if (back) back.addEventListener("click", function (e) { e.stopPropagation(); goBack(); });
+    if (homeBtn) homeBtn.addEventListener("click", function (e) { e.stopPropagation(); closePhoneSheet(); });
+    var gesture = $(".phone-gesture");
+    if (gesture) gesture.addEventListener("click", function (e) { e.stopPropagation(); closePhoneSheet(); });
+    if (skL) skL.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (phoneOpenId) goBack();
+    });
+    if (skC) skC.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (!phoneOpenId) doSelect();
+    });
+    if (skR) skR.addEventListener("click", function (e) { e.stopPropagation(); });
+  }
+
+  function setPhoneVisibility(on) {
+    var phone = $("#phone");
+    if (phone) phone.hidden = !on;
+  }
+
   function openApp(id) {
+    if (phoneMode) {
+      openPhoneSheet(id);
+      return;
+    }
     var win = $(".window[data-win='" + id + "']");
     if (!win) return;
     if (usesLauncher()) {
@@ -192,6 +360,10 @@
   }
 
   function closeApp(id) {
+    if (phoneMode) {
+      closePhoneSheet();
+      return;
+    }
     var win = $(".window[data-win='" + id + "']");
     if (win) {
       win.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
@@ -202,6 +374,10 @@
   }
 
   function backToLauncher() {
+    if (phoneMode) {
+      closePhoneSheet();
+      return;
+    }
     $all(".window.open").forEach(function (w) {
       w.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
       resetWindowGeometry(w);
@@ -246,6 +422,7 @@
     return "";
   }
   var lastClockText = "";
+  var lastPhoneClockText = "";
   function paintChrome(id) {
     var menubar = $("#menubar"), panel = $("#panel-top");
     if (menubar) menubar.innerHTML = menubarHtml(id);
@@ -259,12 +436,22 @@
     });
   }
 
-  function render() {
+  function rebuildTicks() {
     var ticks = $("#tm-ticks");
     ticks.innerHTML = eras.map(function (e, i) {
-      var left = 3 + (i / (eras.length - 1)) * 94;
+      var left = eras.length === 1 ? 50 : 3 + (i / (eras.length - 1)) * 94;
       return "<button type='button' class='tm-tick' data-i='" + i + "' style='left:" + left + "%'><i></i>" + e.short + "</button>";
     }).join("");
+    $all(".tm-tick").forEach(function (t) {
+      var i = Number(t.getAttribute("data-i"));
+      t.addEventListener("click", function () { applyEra(i, true); });
+      t.addEventListener("mouseenter", function () { paintEra(i); });
+      t.addEventListener("focus", function () { paintEra(i); });
+    });
+  }
+
+  function render() {
+    rebuildTicks();
 
     var board = $("#board");
     var dock = $("#dock");
@@ -347,9 +534,10 @@
       return "<button type='button' data-app='" + app.id + "'>" + app.name + "</button>";
     }).join("");
 
-    paintChrome(currentEra().id);
+    if (!phoneMode) paintChrome(currentEra().id);
 
     $all("[data-app]").forEach(function (el) {
+      if (el.closest("#phone")) return;
       el.addEventListener("click", function (e) {
         e.stopPropagation();
         openApp(el.getAttribute("data-app"));
@@ -397,6 +585,10 @@
       $("#start-menu").classList.toggle("open");
     });
     document.addEventListener("click", function () { $("#start-menu").classList.remove("open"); });
+
+    bindPhoneChrome();
+    renderPhoneHome();
+    setPhoneVisibility(phoneMode);
   }
 
   function bindTimeMachine() {
@@ -407,12 +599,7 @@
       try { track.setPointerCapture(e.pointerId); } catch (err) {}
       applyEra(eraFromClientX(e.clientX), true);
     });
-    $all(".tm-tick").forEach(function (t) {
-      var i = Number(t.getAttribute("data-i"));
-      t.addEventListener("click", function () { applyEra(i, true); });
-      t.addEventListener("mouseenter", function () { paintEra(i); });
-      t.addEventListener("focus", function () { paintEra(i); });
-    });
+    rebuildTicks();
     track.addEventListener("mouseleave", function () { if (!tmDrag) paintEra(eraIndex); });
     track.addEventListener("focusout", function () { paintEra(eraIndex); });
     track.addEventListener("pointermove", function (e) {
@@ -432,21 +619,82 @@
     window.addEventListener("resize", function () { paintEra(eraIndex); });
   }
 
+  function applyDeviceMode(on) {
+    phoneMode = on;
+    eras = activeEras();
+    document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    setPhoneVisibility(phoneMode);
+    if (phoneMode) {
+      $all(".window.open").forEach(function (w) {
+        w.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
+        resetWindowGeometry(w);
+      });
+      showGoMenu(false);
+      showActivities(false);
+    } else {
+      closePhoneSheet();
+    }
+    rebuildTicks();
+    var startId = defaultEraId();
+    var idx = 0;
+    eras.forEach(function (e, i) { if (e.id === startId) idx = i; });
+    applyEra(idx, false);
+  }
+
+  function bindPhoneMode() {
+    document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    setPhoneVisibility(phoneMode);
+    var onChange = function (e) { applyDeviceMode(e.matches); };
+    if (phoneMq.addEventListener) phoneMq.addEventListener("change", onChange);
+    else if (phoneMq.addListener) phoneMq.addListener(onChange);
+  }
+
   function tickClock() {
     var fmt = new Intl.DateTimeFormat("en-US", {
       weekday: "short", hour: "numeric", minute: "2-digit", hour12: true,
+      timeZone: "America/Denver"
+    });
+    var phoneFmt = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric", minute: "2-digit", hour12: true,
       timeZone: "America/Denver"
     });
     function go() {
       var t = fmt.format(new Date()).replace(",", "");
       lastClockText = t;
       $all("#clock, .panel-clock").forEach(function (n) { n.textContent = t; });
+      var pt = phoneFmt.format(new Date());
+      lastPhoneClockText = pt;
+      $all("#phone-time").forEach(function (n) { n.textContent = pt; });
     }
     go();
     setInterval(go, 30000);
   }
 
   document.addEventListener("keydown", function (e) {
+    if (phoneMode) {
+      if (e.key === "Escape") {
+        if (phoneOpenId) { e.preventDefault(); closePhoneSheet(); }
+        return;
+      }
+      if (isFeaturePhone() && !phoneOpenId) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          phoneFocus = Math.min(SITE.apps.length - 1, phoneFocus + 1);
+          renderPhoneHome();
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          phoneFocus = Math.max(0, phoneFocus - 1);
+          renderPhoneHome();
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var app = SITE.apps[phoneFocus];
+          if (app) openPhoneSheet(app.id);
+        }
+      }
+      return;
+    }
     if (!usesLauncher()) return;
     if (e.key === "Escape") {
       if ($(".window.open")) { e.preventDefault(); backToLauncher(); }
@@ -468,13 +716,14 @@
     }
   });
 
+  bindPhoneMode();
   render();
   bindTimeMachine();
   tickClock();
 
   var q = new URLSearchParams(location.search).get("era");
-  var start = SITE.defaultEra;
-  if (q) start = q;
+  var start = defaultEraId();
+  if (q && eras.some(function (e) { return e.id === q; })) start = q;
   var idx = 0;
   eras.forEach(function (e, i) { if (e.id === start) idx = i; });
   applyEra(idx, false);

@@ -1,0 +1,43 @@
+/* Ericsson T28 — slim flip, mono LCD, numbered menu, softkeys */
+[data-era="t28"] body { font-family: "Courier New", ui-monospace, monospace; font-size: 13px; }
+[data-era="t28"] .os { background: #2a2a2a; color: #111; }
+[data-era="t28"] .desktop { background: #3a3a3a; }
+[data-era="t28"] .phone-bezel {
+  background: linear-gradient(180deg, #5a5a5a, #2e2e2e);
+  border-radius: 18px 18px 22px 22px;
+  border: 2px solid #1a1a1a;
+  max-width: 280px;
+}
+[data-era="t28"] .phone-status {
+  color: #111; background: #c8c8b0; padding: 4px 8px;
+  font: 700 10px/1 "Courier New", monospace;
+}
+[data-era="t28"] .phone-carrier { text-transform: uppercase; letter-spacing: .06em; }
+[data-era="t28"] .phone-screen { background: #c8c8b0; color: #111; }
+[data-era="t28"] .phone-home { padding: 4px 6px; }
+[data-era="t28"] .phone-list-item button {
+  font: 700 12px/1.3 "Courier New", monospace; padding: 5px 4px;
+}
+[data-era="t28"] .phone-list-item.focus {
+  background: #111; color: #c8c8b0;
+}
+[data-era="t28"] .phone-softkeys {
+  display: flex; background: #3a3a3a; color: #ddd;
+  border-top: 1px solid #111;
+}
+[data-era="t28"] .phone-sheet { background: #c8c8b0; color: #111; }
+[data-era="t28"] .phone-sheet-bar {
+  background: #a8a890; border-bottom: 1px solid #111;
+  font-family: "Courier New", monospace;
+}
+[data-era="t28"] .phone-back { font: 700 12px/1 "Courier New", monospace; }
+[data-era="t28"] .phone-sheet-title { font: 700 12px/1.2 "Courier New", monospace; }
+[data-era="t28"] .phone-sheet-body { font: 12px/1.35 "Courier New", monospace; }
+[data-era="t28"] .btn {
+  background: #111; color: #c8c8b0; border: 0; padding: 6px 10px;
+  font: 700 12px/1 "Courier New", monospace;
+}
+[data-era="t28"] .phone-home-btn,
+[data-era="t28"] .phone-gesture,
+[data-era="t28"] .phone-island,
+[data-era="t28"] .phone-earpiece { display: none; }

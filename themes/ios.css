@@ -1,0 +1,62 @@
+/* Current iOS — Dynamic Island + gesture + flat modern */
+[data-era="ios"] body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; font-size: 14px; }
+[data-era="ios"] .os { background: #000; color: #fff; }
+[data-era="ios"] .desktop { background: #0a0a0c; }
+[data-era="ios"] .phone-bezel {
+  background: #000;
+  border-radius: 40px;
+  border: 2px solid #222;
+  max-width: 390px;
+}
+[data-era="ios"] .phone-island { display: block; }
+[data-era="ios"] .phone-status {
+  color: #fff; background: transparent;
+  padding: 14px 22px 6px;
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-era="ios"] .phone-carrier { opacity: 0; width: 0; overflow: hidden; }
+[data-era="ios"] .phone-screen {
+  background: #1c1c1e;
+  color: #fff;
+}
+[data-era="ios"] .phone-home-icons .phone-icons {
+  grid-template-columns: repeat(4, 1fr); gap: 18px 10px; padding: 24px 16px 32px;
+}
+[data-era="ios"] .phone-icon .glyph-wrap {
+  width: 60px; height: 60px; border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,.35);
+}
+[data-era="ios"] .phone-icon .label {
+  font: 500 11px/1.15 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-era="ios"] .i-github .glyph-wrap,
+[data-era="ios"] .i-omarchy .glyph-wrap { background: #000; }
+[data-era="ios"] .phone-sheet {
+  background: #1c1c1e; color: #fff;
+}
+[data-era="ios"] .phone-sheet-bar {
+  background: rgba(28,28,30,.92); backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid rgba(255,255,255,.12); color: #fff;
+  padding: 12px 14px;
+}
+[data-era="ios"] .phone-back {
+  color: #0a84ff; font: 400 17px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-era="ios"] .phone-sheet-title {
+  font: 600 17px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+[data-era="ios"] .btn {
+  background: #0a84ff; color: #fff; border: 0; border-radius: 12px;
+  padding: 10px 16px; font-weight: 600;
+}
+[data-era="ios"] .folder a {
+  border-radius: 12px; background: #2c2c2e; margin-bottom: 6px;
+}
+[data-era="ios"] .about-pane .headshot { border-radius: 50%; }
+[data-era="ios"] .phone-gesture {
+  display: block; background: rgba(255,255,255,.55); width: 128px; height: 5px;
+}
+[data-era="ios"] .phone-softkeys,
+[data-era="ios"] .phone-home-btn,
+[data-era="ios"] .phone-earpiece { display: none; }

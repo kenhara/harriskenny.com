@@ -1,0 +1,57 @@
+/* Google Pixel — Material You / Pixel launcher, gesture bar */
+[data-era="pixel"] body { font-family: "Google Sans", Roboto, system-ui, sans-serif; font-size: 14px; }
+[data-era="pixel"] .os { background: #0f0f12; color: #e8eaed; }
+[data-era="pixel"] .desktop { background: #12141a; }
+[data-era="pixel"] .phone-bezel {
+  background: #1a1c22;
+  border-radius: 32px;
+  border: 2px solid #2a2c34;
+  max-width: 360px;
+}
+[data-era="pixel"] .phone-status {
+  color: #e8eaed; background: transparent; padding: 10px 18px 6px;
+  font: 500 12px/1 Roboto, system-ui, sans-serif;
+}
+[data-era="pixel"] .phone-carrier { display: none; }
+[data-era="pixel"] .phone-screen {
+  background: #1e222c;
+  color: #e8eaed;
+}
+[data-era="pixel"] .phone-home-icons .phone-icons {
+  grid-template-columns: repeat(4, 1fr); gap: 18px 10px; padding: 20px 14px 28px;
+}
+[data-era="pixel"] .phone-icon .glyph-wrap {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: #30343e;
+  box-shadow: 0 2px 6px rgba(0,0,0,.25);
+}
+[data-era="pixel"] .phone-icon .label {
+  font: 500 11px/1.15 Roboto, system-ui, sans-serif; color: #e8eaed;
+}
+[data-era="pixel"] .i-github .glyph-wrap,
+[data-era="pixel"] .i-omarchy .glyph-wrap { background: #000; }
+[data-era="pixel"] .phone-sheet {
+  background: #13151a; color: #e8eaed; border-radius: 20px 20px 0 0;
+}
+[data-era="pixel"] .phone-sheet-bar {
+  background: #1e222c; border-bottom: 0; color: #e8eaed;
+  padding: 12px 14px;
+}
+[data-era="pixel"] .phone-back {
+  color: #a8c7fa; font: 500 14px/1 Roboto, system-ui, sans-serif;
+}
+[data-era="pixel"] .phone-sheet-title { font: 500 16px/1.2 Roboto, system-ui, sans-serif; }
+[data-era="pixel"] .btn {
+  background: #a8c7fa; color: #062e6f; border: 0; border-radius: 20px;
+  padding: 10px 18px; font-weight: 600;
+}
+[data-era="pixel"] .folder a {
+  border-radius: 12px; background: #1e222c; margin-bottom: 6px;
+}
+[data-era="pixel"] .phone-gesture {
+  display: block; background: rgba(232,234,237,.55);
+}
+[data-era="pixel"] .phone-softkeys,
+[data-era="pixel"] .phone-home-btn,
+[data-era="pixel"] .phone-island,
+[data-era="pixel"] .phone-earpiece { display: none; }

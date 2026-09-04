@@ -1,0 +1,42 @@
+/* Motorola Razr — color screen, Phonebook/Media softkeys */
+[data-era="razr"] body { font-family: Tahoma, "Segoe UI", sans-serif; font-size: 13px; }
+[data-era="razr"] .os { background: #1c1c1e; color: #fff; }
+[data-era="razr"] .desktop { background: #2a2a2e; }
+[data-era="razr"] .phone-bezel {
+  background: linear-gradient(180deg, #d0d4d8, #9aa0a6 70%, #c2185b);
+  border-radius: 12px 12px 18px 18px;
+  border: 2px solid #666;
+  max-width: 280px;
+}
+[data-era="razr"] .phone-status {
+  color: #e8e8ec; background: #1a1830; padding: 4px 8px;
+  font: 600 10px/1 Tahoma, sans-serif;
+}
+[data-era="razr"] .phone-screen {
+  background: linear-gradient(180deg, #2a1848 0%, #6a2860 45%, #c45a28 100%);
+  color: #fff;
+}
+[data-era="razr"] .phone-home { padding: 6px 8px; }
+[data-era="razr"] .phone-list-item button {
+  font: 600 12px/1.35 Tahoma, sans-serif; color: #fff; padding: 6px 4px;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+[data-era="razr"] .phone-list-item.focus {
+  background: rgba(0,0,0,.35); outline: 1px solid rgba(255,255,255,.4);
+}
+[data-era="razr"] .phone-softkeys {
+  display: flex; background: rgba(20,20,28,.85); color: #eee;
+  border-top: 1px solid rgba(255,255,255,.15);
+}
+[data-era="razr"] .phone-sheet { background: #1e1e28; color: #eee; }
+[data-era="razr"] .phone-sheet-bar {
+  background: #2a2a38; border-bottom: 1px solid #111; color: #fff;
+}
+[data-era="razr"] .btn {
+  background: #c2185b; color: #fff; border: 0; border-radius: 3px; padding: 6px 10px;
+}
+[data-era="razr"] .folder a { border-bottom: 1px solid rgba(255,255,255,.1); }
+[data-era="razr"] .phone-home-btn,
+[data-era="razr"] .phone-gesture,
+[data-era="razr"] .phone-island,
+[data-era="razr"] .phone-earpiece { display: none; }

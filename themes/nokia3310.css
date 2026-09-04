@@ -1,0 +1,44 @@
+/* Nokia 3310 — green mono LCD, Menu softkey */
+[data-era="nokia3310"] body { font-family: Tahoma, "Segoe UI", sans-serif; font-size: 13px; }
+[data-era="nokia3310"] .os { background: #1a2430; color: #111; }
+[data-era="nokia3310"] .desktop { background: #1a2430; }
+[data-era="nokia3310"] .phone-bezel {
+  background: #1e2a38;
+  border-radius: 24px 24px 28px 28px;
+  border: 3px solid #0e141c;
+  max-width: 300px;
+  box-shadow: inset 0 0 0 4px #4a5560;
+}
+[data-era="nokia3310"] .phone-status {
+  color: #1a2018; background: #92ad7f; padding: 4px 8px;
+  font: 700 10px/1 Tahoma, sans-serif;
+}
+[data-era="nokia3310"] .phone-screen { background: #92ad7f; color: #1a2018; }
+[data-era="nokia3310"] .phone-home { padding: 4px 6px; }
+[data-era="nokia3310"] .phone-list-item button {
+  font: 700 13px/1.35 Tahoma, sans-serif; padding: 6px 4px;
+}
+[data-era="nokia3310"] .phone-list-item.focus {
+  background: #1a2018; color: #92ad7f;
+}
+[data-era="nokia3310"] .phone-softkeys {
+  display: flex; background: #2a3540; color: #c8d0d8;
+  border-top: 2px solid #0e141c;
+}
+[data-era="nokia3310"] .phone-sk-c {
+  font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+}
+[data-era="nokia3310"] .phone-sheet { background: #92ad7f; color: #1a2018; }
+[data-era="nokia3310"] .phone-sheet-bar {
+  background: #7a9470; border-bottom: 1px solid #1a2018;
+}
+[data-era="nokia3310"] .phone-back,
+[data-era="nokia3310"] .phone-sheet-title { font-weight: 700; }
+[data-era="nokia3310"] .btn {
+  background: #1a2018; color: #92ad7f; border: 0; padding: 6px 10px; font-weight: 700;
+}
+[data-era="nokia3310"] .folder a { border-bottom: 1px solid rgba(26,32,24,.25); }
+[data-era="nokia3310"] .phone-home-btn,
+[data-era="nokia3310"] .phone-gesture,
+[data-era="nokia3310"] .phone-island,
+[data-era="nokia3310"] .phone-earpiece { display: none; }

@@ -77,5 +77,16 @@ window.SITE = {
     { id: "macos",   name: "MacOS",          short: "MacOS" },
     { id: "omarchy", name: "Omarchy",        short: "Omarchy" }
   ],
-  defaultEra: "omarchy"
+  defaultEra: "omarchy",
+  phoneEras: [
+    { id: "t28",       name: "Ericsson T28", short: "T28" },
+    { id: "nokia3310", name: "Nokia 3310",   short: "3310" },
+    { id: "razr",      name: "Motorola Razr", short: "Razr" },
+    { id: "gzone",     name: "Casio G'zOne", short: "G'zOne" },
+    { id: "iphone",    name: "iPhone",       short: "iPhone" },
+    { id: "pixel",     name: "Google Pixel", short: "Pixel" },
+    { id: "ios",       name: "iOS",          short: "iOS" }
+  ],
+  defaultPhoneEra: "ios",
+  phoneBreakpoint: 720
 };
