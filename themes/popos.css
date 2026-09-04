@@ -1,0 +1,134 @@
+[data-era="popos"] body { font-family: "Fira Sans", "Ubuntu", sans-serif; font-size: 14px; }
+[data-era="popos"] .os { background: #12141a; color: #eee; }
+[data-era="popos"] .desktop {
+  background-color: #0e1116;
+  background-image: url("../wallpapers/popos.jpg?v=1788484000");
+  background-size: cover;
+  background-position: center;
+}
+[data-era="popos"] .icon { color: #f2f2f2; }
+[data-era="popos"] .window { background: #1c1f26; border: 1px solid #3a414c; border-radius: 10px; color: #eee; box-shadow: 0 12px 40px rgba(0,0,0,.45); }
+[data-era="popos"] .titlebar { height: 36px; padding: 0 12px; background: #16181e; border-radius: 10px 10px 0 0; color: #ddd; --widget-gap: 8px; cursor: default; }
+[data-era="popos"] .widget { width: 18px; height: 18px; background: #2a2f38; border: 0; border-radius: 4px; color: #ddd; }
+[data-era="popos"] .pane { background: #1c1f26; }
+[data-era="popos"] .btn { background: #48b9c7; color: #082226; border: 0; border-radius: 6px; font-weight: 600; }
+[data-era="popos"] .panel-top {
+  display: flex; height: 32px; padding: 0 12px; align-items: center; gap: 16px;
+  background: rgba(26, 29, 36, 0.92); color: #ddd; border-bottom: 1px solid #2c313c;
+  backdrop-filter: blur(8px);
+}
+[data-era="popos"] .panel-activities {
+  appearance: none; -webkit-appearance: none;
+  background: transparent; border: 0; color: inherit; font: inherit;
+  padding: 0; cursor: pointer;
+}
+[data-era="popos"] .panel-activities:hover { color: #48b9c7; }
+[data-era="popos"] .panel-status i { color: #48b9c7; }
+[data-era="popos"] .about-pane .headshot { border-radius: 50%; }
+
+/* Desktop icons hide; Activities is the launcher. */
+[data-era="popos"] .board { display: none; }
+
+/* Left dock (Pop!_Shop style dash). */
+[data-era="popos"] .dock {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  z-index: 7; width: 56px; padding: 12px 8px;
+  background: rgba(20, 24, 30, 0.72); border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+}
+[data-era="popos"] .dock .icon {
+  width: 40px; height: 40px; margin: 0; padding: 0;
+}
+[data-era="popos"] .dock .label { display: none; }
+[data-era="popos"] .dock .glyph-wrap {
+  width: 40px; height: 40px; border-radius: 22%;
+}
+
+/* GNOME-style Activities overview. */
+[data-era="popos"] .activities {
+  display: none;
+  position: absolute; inset: 0; z-index: 6;
+  background: rgba(8, 12, 16, 0.28);
+  backdrop-filter: blur(2px);
+  padding: 48px 80px 56px;
+  box-sizing: border-box;
+}
+[data-era="popos"] .activities.open { display: flex; flex-direction: column; align-items: center; }
+[data-era="popos"] .act-search {
+  width: min(420px, 70vw); margin: 8px 0 28px;
+}
+[data-era="popos"] .act-filter {
+  width: 100%; height: 36px; padding: 0 14px;
+  border: 0; border-radius: 8px;
+  background: rgba(30, 34, 42, 0.85);
+  color: #eee; font: 14px/36px "Fira Sans", "Ubuntu", sans-serif;
+  outline: none; box-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+[data-era="popos"] .act-filter::placeholder { color: #9aa3b2; }
+[data-era="popos"] .act-filter:focus { box-shadow: 0 0 0 2px rgba(72,185,199,.45); }
+[data-era="popos"] .act-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 110px));
+  gap: 18px 22px;
+  justify-content: center;
+  width: min(720px, 86vw);
+  max-width: 720px;
+}
+[data-era="popos"] .act-app {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: transparent; border: 0; color: #f2f2f2; cursor: pointer;
+  padding: 8px 4px; border-radius: 10px; font: inherit;
+}
+[data-era="popos"] .act-app:hover,
+[data-era="popos"] .act-app:focus-visible {
+  background: rgba(255,255,255,.08); outline: none;
+}
+[data-era="popos"] .act-app .glyph-wrap {
+  width: 64px; height: 64px; border-radius: 18px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+}
+[data-era="popos"] .act-app .glyph { width: 40px; height: 40px; }
+[data-era="popos"] .act-app .dos-file { display: none; }
+[data-era="popos"] .act-label {
+  font-size: 12px; text-align: center; max-width: 100px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.7);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+[data-era="popos"] .act-tabs {
+  margin-top: auto; display: flex; gap: 28px; padding-top: 28px;
+}
+[data-era="popos"] .act-tab {
+  appearance: none; background: transparent; border: 0; color: #c8cdd8;
+  font: 13px "Fira Sans", "Ubuntu", sans-serif; padding: 4px 2px;
+  border-bottom: 2px solid transparent; cursor: default;
+}
+[data-era="popos"] .act-tab.on { color: #fff; border-bottom-color: #48b9c7; }
+[data-era="popos"] .act-hint {
+  position: absolute; right: 16px; bottom: 10px;
+  margin: 0; font-size: 11px; color: rgba(255,255,255,.35);
+}
+
+/* Centered popup when an app is open. */
+[data-era="popos"] .window.pop-pop {
+  max-width: min(92vw, 440px);
+  box-shadow: 0 0 0 1px rgba(72,185,199,.2), 0 18px 48px rgba(0,0,0,.55);
+}
+[data-era="popos"] .widget-shade,
+[data-era="popos"] .widget-zoom,
+[data-era="popos"] .widget-close { display: none; }
+[data-era="popos"] .widget-back {
+  display: inline-grid; order: 0;
+  width: 28px; height: 24px; padding: 0;
+  font: 700 14px/24px "Fira Sans", sans-serif;
+  background: #2a2f38; color: #ddd; border-radius: 4px;
+}
+[data-era="popos"] .widget-back:hover { background: #48b9c7; color: #082226; }
+[data-era="popos"] .widget-exit {
+  display: inline-grid; order: 5;
+  width: auto; height: 24px; padding: 0 10px;
+  font: 600 12px/24px "Fira Sans", sans-serif;
+  background: #2a2f38; color: #ddd; border-radius: 4px;
+}
+[data-era="popos"] .widget-exit:hover { background: #48b9c7; color: #082226; }

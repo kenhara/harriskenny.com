@@ -1,0 +1,35 @@
+[data-era="dos"] body { font-family: "Courier New", "Lucida Console", ui-monospace, monospace; font-size: 13px; }
+[data-era="dos"] .os { background: #000; color: #55ff55; }
+[data-era="dos"] .desktop {
+  background-color: #000;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,40,0,.35) 2px 3px);
+}
+[data-era="dos"] .icon { color: #ffff55; }
+[data-era="dos"] .window {
+  background: #000; border: 1px solid #55ff55; color: #55ff55;
+  font-family: "Courier New", "Lucida Console", ui-monospace, monospace;
+}
+[data-era="dos"] .titlebar {
+  height: 18px; padding: 0 6px; background: #55ff55; color: #000; font-weight: 700; --widget-gap: 4px;
+}
+[data-era="dos"] .widget { background: #000; color: #55ff55; border: 1px solid #55ff55; }
+[data-era="dos"] .pane { background: #000; color: #55ff55; }
+[data-era="dos"] .btn { background: #000; color: #55ffff; border: 1px solid #55ffff; }
+[data-era="dos"] .folder a:hover { background: #003300; }
+[data-era="dos"] .taskbar {
+  display: flex; align-items: center; height: 22px; padding: 0 8px;
+  background: #000; color: #55ffff; border-top: 1px solid #003300;
+  font-family: "Courier New", "Lucida Console", ui-monospace, monospace;
+}
+[data-era="dos"] .taskbar::before { content: "C:\\HARRIS>"; margin-right: 12px; color: #55ffff; }
+[data-era="dos"] .start, [data-era="dos"] .tasks { display: none !important; }
+[data-era="dos"] .tray { margin-left: auto; border: 0; color: #ffff55; padding: 0; }
+[data-era="dos"] .about-pane .headshot { image-rendering: pixelated; border: 1px solid #55ff55; border-radius: 0; width: 80px; height: 80px; }
+
+[data-era="dos"] .folder .glyph { display: none; }
+[data-era="dos"] .folder a::before {
+  content: "*";
+  flex: 0 0 1.25em;
+  color: #ffff55;
+  font-weight: 700;
+}

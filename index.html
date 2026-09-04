@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" data-era="omarchy">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harris Kenny</title>
+  <meta name="description" content="Harris Kenny, founder of OutboundSync. A little ode to a computing journey.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preload" as="image" href="wallpapers/omarchy.jpg?v=1788484000" fetchpriority="high">
+  <link rel="stylesheet" href="css/base.css?v=1788484000">
+  <link rel="stylesheet" id="era-sheet" href="themes/omarchy.css?v=1788484000">
+</head>
+<body>
+  <div class="tm">
+    <div class="tm-title"><span class="tm-word">Time Machine</span><strong id="tm-era">Omarchy</strong></div>
+    <div class="tm-track" id="tm-track" role="slider" tabindex="0" aria-label="Computer history" aria-valuemin="0" aria-valuemax="8" aria-valuenow="8" aria-valuetext="Omarchy">
+      <div class="tm-line"></div>
+      <div class="tm-ticks" id="tm-ticks"></div>
+      <div class="tm-handle" id="tm-handle"></div>
+    </div>
+  </div>
+
+  <div class="os">
+    <header class="menubar" id="menubar"></header>
+    <header class="panel-top" id="panel-top"></header>
+    <div class="desktop">
+      <nav class="board" id="board" aria-label="Desktop"></nav>
+      <div class="go-menu" id="go-menu" hidden></div>
+      <div class="activities" id="activities" hidden></div>
+      <div id="windows"></div>
+      <footer class="dock" id="dock"></footer>
+      <div class="start-menu" id="start-menu"></div>
+    </div>
+    <footer class="taskbar">
+      <button class="start" type="button" id="start">Start</button>
+      <div class="tasks" id="tasks"></div>
+      <div class="tray"><span id="clock"></span></div>
+    </footer>
+  </div>
+
+  <script>window.__V = "1788484000";</script>
+  <script src="js/data.js?v=1788484000"></script>
+  <script src="js/icons.js?v=1788484000"></script>
+  <script src="js/desktop.js?v=1788484000"></script>
+</body>
+</html>

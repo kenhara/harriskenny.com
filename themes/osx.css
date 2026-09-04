@@ -1,0 +1,33 @@
+[data-era="osx"] body { font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, sans-serif; font-size: 13px; }
+[data-era="osx"] .os { background: #3a6ea5; color: #111; }
+[data-era="osx"] .desktop {
+  background-color: #2a5f96;
+  background-image: url("../wallpapers/osx.jpg?v=1788464000");
+  background-size: cover;
+  background-position: center;
+}
+[data-era="osx"] .icon { color: #fff; }
+[data-era="osx"] .icon .label { text-shadow: 0 1px 2px #000; }
+[data-era="osx"] .window { background: #ececec; border: 1px solid #5a5a5a; border-radius: 8px 8px 0 0; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+[data-era="osx"] .titlebar {
+  height: 22px; padding: 0 8px; border-radius: 8px 8px 0 0;
+  background: linear-gradient(#f6f6f6,#cfcfcf); color: #222;
+}
+[data-era="osx"] .widget { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #666; }
+[data-era="osx"] .widget-close { background: #ff5f57; }
+[data-era="osx"] .widget-shade { background: #febc2e; }
+[data-era="osx"] .widget-zoom { background: #28c840; }
+[data-era="osx"] .pane { background: #fff; border-radius: 0 0 6px 6px; }
+[data-era="osx"] .btn { background: linear-gradient(#fff,#ddd); border: 1px solid #7a7a7a; border-radius: 4px; }
+[data-era="osx"] .menubar {
+  display: flex; height: 22px; padding: 0 10px; align-items: center; gap: 14px;
+  background: linear-gradient(#ececec,#c8c8c8); border-bottom: 1px solid #7a7a7a; font-weight: 600;
+}
+[data-era="osx"] .dock {
+  display: flex; gap: 10px; justify-content: center; align-items: flex-end;
+  position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
+  padding: 6px 14px 8px; background: rgba(255,255,255,.28);
+  border: 1px solid rgba(255,255,255,.4); border-radius: 8px;
+}
+[data-era="osx"] .dock .icon { position: static; width: 52px; }
+[data-era="osx"] .about-pane .headshot { border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
