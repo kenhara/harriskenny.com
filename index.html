@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-era="omarchy">
+<html lang="en" data-era="omarchy" data-device="desktop">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,9 +8,9 @@
   <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="preload" as="image" href="wallpapers/omarchy.jpg?v=1788491000" fetchpriority="high">
-  <link rel="stylesheet" href="css/base.css?v=1788491000">
-  <link rel="stylesheet" id="era-sheet" href="themes/omarchy.css?v=1788491000">
+  <link rel="preload" as="image" href="wallpapers/omarchy.jpg?v=1788531006" fetchpriority="high">
+  <link rel="stylesheet" href="css/base.css?v=1788531006">
+  <link rel="stylesheet" id="era-sheet" href="themes/omarchy.css?v=1788531006">
 </head>
 <body>
   <div class="tm">
@@ -32,6 +32,34 @@
       <div id="windows"></div>
       <footer class="dock" id="dock"></footer>
       <div class="start-menu" id="start-menu"></div>
+      <div class="phone" id="phone" hidden>
+        <div class="phone-bezel">
+          <div class="phone-earpiece" aria-hidden="true"></div>
+          <div class="phone-island" aria-hidden="true"></div>
+          <div class="phone-status" id="phone-status">
+            <span class="phone-carrier" id="phone-carrier">Carrier</span>
+            <span class="phone-time" id="phone-time"></span>
+            <span class="phone-batt" aria-hidden="true"></span>
+          </div>
+          <div class="phone-screen">
+            <div class="phone-home" id="phone-home"></div>
+          </div>
+          <div class="phone-sheet" id="phone-sheet" hidden>
+            <div class="phone-sheet-bar" id="phone-sheet-bar">
+              <button type="button" class="phone-back" id="phone-back" aria-label="Back">Back</button>
+              <span class="phone-sheet-title" id="phone-sheet-title"></span>
+            </div>
+            <div class="phone-sheet-body" id="phone-sheet-body"></div>
+          </div>
+          <div class="phone-softkeys" id="phone-softkeys">
+            <button type="button" class="phone-sk phone-sk-l" id="phone-sk-l">Back</button>
+            <button type="button" class="phone-sk phone-sk-c" id="phone-sk-c">Select</button>
+            <button type="button" class="phone-sk phone-sk-r" id="phone-sk-r"></button>
+          </div>
+          <button type="button" class="phone-home-btn" id="phone-home-btn" aria-label="Home"></button>
+          <div class="phone-gesture" aria-hidden="true"></div>
+        </div>
+      </div>
     </div>
     <footer class="taskbar">
       <button class="start" type="button" id="start">Start</button>
@@ -40,9 +68,9 @@
     </footer>
   </div>
 
-  <script>window.__V = "1788491000";</script>
-  <script src="js/data.js?v=1788491000"></script>
-  <script src="js/icons.js?v=1788491000"></script>
-  <script src="js/desktop.js?v=1788491000"></script>
+  <script>window.__V = "1788531000";</script>
+  <script src="js/data.js?v=1788531006"></script>
+  <script src="js/icons.js?v=1788531006"></script>
+  <script src="js/desktop.js?v=1788531006"></script>
 </body>
 </html>

@@ -1,0 +1,58 @@
+/* Nokia 3310 — green mono LCD, text menu, readable mobile type */
+[data-era="nokia3310"] body { font-family: Tahoma, "MS Sans Serif", sans-serif; font-size: 15px; }
+[data-era="nokia3310"] .os { background: #1a2430; color: #111; }
+[data-era="nokia3310"] .desktop { background: #1a2430; }
+[data-era="nokia3310"] .phone-bezel {
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  max-width: none;
+  box-shadow: none;
+  padding-bottom: 0;
+}
+
+[data-era="nokia3310"] .phone-status {
+  color: #1a2018; background: #9fb18c; padding: 8px 10px 4px;
+  font: 700 13px/1 Tahoma, sans-serif;
+  letter-spacing: .02em;
+}
+[data-era="nokia3310"] .phone-carrier {
+  font-weight: 800; letter-spacing: .08em; font-size: 13px;
+}
+[data-era="nokia3310"] .phone-time { font-size: 13px; }
+[data-era="nokia3310"] .phone-screen { background: #9fb18c; color: #1a2018; }
+[data-era="nokia3310"] .phone-home { padding: 6px 10px 0; }
+[data-era="nokia3310"] .phone-list-item button {
+  font: 700 15px/1.4 Tahoma, sans-serif;
+  padding: 9px 6px;
+  letter-spacing: 0.01em;
+}
+[data-era="nokia3310"] .phone-list-item.focus {
+  background: #1a2018; color: #9fb18c;
+}
+[data-era="nokia3310"] .phone-softkeys {
+  display: flex; background: #9fb18c; color: #1a2018;
+  border-top: 0; padding: 8px 10px 12px;
+}
+[data-era="nokia3310"] .phone-sk {
+  color: #1a2018; font: 800 14px/1 Tahoma, sans-serif;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+[data-era="nokia3310"] .phone-sk-c { font-weight: 800; }
+[data-era="nokia3310"] .phone-sheet { background: #9fb18c; color: #1a2018; font-size: 15px; }
+[data-era="nokia3310"] .phone-sheet-bar {
+  background: #8aa07a; border-bottom: 1px solid #1a2018; padding: 10px 10px;
+}
+[data-era="nokia3310"] .phone-back,
+[data-era="nokia3310"] .phone-sheet-title { font-weight: 700; font-size: 16px; }
+[data-era="nokia3310"] .phone-sheet-body { font-size: 15px; line-height: 1.45; }
+[data-era="nokia3310"] .btn {
+  background: #1a2018; color: #9fb18c; border: 0; padding: 10px 14px; font-weight: 700; font-size: 14px;
+}
+[data-era="nokia3310"] .folder a { border-bottom: 1px solid rgba(26,32,24,.25); font-size: 15px; }
+[data-era="nokia3310"] .folder b { font-size: 15px; }
+[data-era="nokia3310"] .folder em { font-size: 13px; }
+[data-era="nokia3310"] .phone-home-btn,
+[data-era="nokia3310"] .phone-gesture,
+[data-era="nokia3310"] .phone-island,
+[data-era="nokia3310"] .phone-earpiece { display: none; }

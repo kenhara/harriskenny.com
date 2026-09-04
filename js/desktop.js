@@ -1,16 +1,33 @@
 (function () {
   var SITE = window.SITE;
-  var eras = SITE.eras;
+  var phoneMq = window.matchMedia("(max-width: " + SITE.phoneBreakpoint + "px)");
+  var phoneMode = phoneMq.matches;
+  function deviceKind() {
+    var w = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (w <= (SITE.phoneMax || SITE.phoneBreakpoint || 480)) return "phone";
+    if (w < (SITE.desktopMin || 1024)) return "tablet";
+    return "desktop";
+  }
+  var eras = phoneMode ? SITE.phoneEras : SITE.eras;
   var eraIndex = 0;
   var z = 8;
   var tmDrag = false;
+  var phoneOpenId = null;
+  var phoneFocus = 0;
+  var FEATURE = { t28: 1, nokia3310: 1, razr: 1, gzone: 1 };
 
   function $(sel, el) { return (el || document).querySelector(sel); }
   function $all(sel, el) { return [].slice.call((el || document).querySelectorAll(sel)); }
 
   function currentEra() { return eras[eraIndex]; }
+  function isFeaturePhone() { return phoneMode && !!FEATURE[currentEra().id]; }
+  function isSmartPhone() { return phoneMode && !FEATURE[currentEra().id]; }
 
-  /* Visual paint only — no eraIndex / history. Hover preview and commit both use this. */
+  function activeEras() { return phoneMode ? SITE.phoneEras : SITE.eras; }
+  function defaultEraId() { return phoneMode ? SITE.defaultPhoneEra : SITE.defaultEra; }
+
+  /* Visual paint only — no eraIndex / history. Hover preview and commit both use this.
+     Desktop + phone share this path: theme, ticks, and device chrome/home for the painted era. */
   function paintEra(i) {
     var era = eras[Math.max(0, Math.min(eras.length - 1, i))];
     document.documentElement.setAttribute("data-era", era.id);
@@ -26,19 +43,29 @@
       handle.style.left = (r.left + r.width / 2 - tr.left) + "px";
     }
     ticks.forEach(function (t, n) { t.classList.toggle("on", n === idx); });
-    paintChrome(era.id);
+    if (!phoneMode) {
+      paintChrome(era.id);
+    } else {
+      paintPhoneChrome(era.id);
+      renderPhoneHome(era);
+      syncPhoneSoftkeys(era.id);
+    }
   }
 
   function applyEra(i, fromUi) {
     eraIndex = Math.max(0, Math.min(eras.length - 1, i));
     var era = currentEra();
+    if (phoneMode) closePhoneSheet();
     paintEra(eraIndex);
     $("#tm-track").setAttribute("aria-valuenow", String(eraIndex));
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
+    $("#tm-track").setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
-    syncLauncherChrome();
-    renderTasks();
+    if (!phoneMode) {
+      syncLauncherChrome();
+      renderTasks();
+    }
     if (fromUi) {
       try { history.replaceState(null, "", "?era=" + era.id + location.hash); } catch (e) {}
     }
@@ -89,8 +116,8 @@
     });
   }
 
-  function isOmarchy() { return currentEra().id === "omarchy"; }
-  function isPopos() { return currentEra().id === "popos"; }
+  function isOmarchy() { return !phoneMode && currentEra().id === "omarchy"; }
+  function isPopos() { return !phoneMode && currentEra().id === "popos"; }
   function usesLauncher() { return isOmarchy() || isPopos(); }
 
   function goMenuEl() { return $("#go-menu"); }
@@ -170,7 +197,227 @@
     win.style.transform = "translate(-50%, -50%)";
   }
 
+  /* —— Phone shell —— */
+  function closePhoneSheet() {
+    phoneOpenId = null;
+    var sheet = $("#phone-sheet");
+    var home = $("#phone-home");
+    if (sheet) {
+      sheet.classList.remove("is-open");
+      if (currentEra().id === "ios") {
+        window.setTimeout(function () {
+          if (!phoneOpenId && sheet) sheet.hidden = true;
+        }, 320);
+      } else {
+        sheet.hidden = true;
+      }
+    }
+    if (home) home.hidden = false;
+    syncPhoneSoftkeys();
+  }
+
+  function openPhoneSheet(id) {
+    var app = SITE.apps.find(function (a) { return a.id === id; });
+    if (!app) return;
+    phoneOpenId = id;
+    var sheet = $("#phone-sheet");
+    var home = $("#phone-home");
+    var title = $("#phone-sheet-title");
+    var body = $("#phone-sheet-body");
+    if (home) home.hidden = true;
+    if (title) title.textContent = app.windowTitle;
+    if (body) body.innerHTML = paneFor(app);
+    if (sheet) {
+      sheet.hidden = false;
+      sheet.classList.remove("is-open");
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          if (phoneOpenId === id) sheet.classList.add("is-open");
+        });
+      });
+    }
+    syncPhoneSoftkeys();
+  }
+
+  function syncPhoneSoftkeys(eraIdOpt) {
+    var sk = $("#phone-softkeys");
+    var id = eraIdOpt || currentEra().id;
+    var open = !!phoneOpenId;
+    document.documentElement.classList.toggle("phone-app-open", open);
+    if (!sk) return;
+    var l = $("#phone-sk-l"), c = $("#phone-sk-c"), r = $("#phone-sk-r");
+    if (id === "nokia3310") {
+      l.textContent = open ? "Back" : "";
+      c.textContent = open ? "Select" : "Menu";
+      r.textContent = "";
+    } else if (id === "razr") {
+      l.textContent = open ? "Back" : "Phonebook";
+      c.textContent = open ? "OK" : "";
+      r.textContent = open ? "" : "Media";
+    } else if (id === "t28") {
+      l.textContent = open ? "Back" : "Names";
+      c.textContent = open ? "Select" : "Menu";
+      r.textContent = open ? "" : "";
+    } else if (id === "gzone") {
+      l.textContent = open ? "Back" : "Back";
+      c.textContent = open ? "Select" : "Select";
+      r.textContent = "";
+    } else {
+      l.textContent = "Back";
+      c.textContent = "Select";
+      r.textContent = "";
+    }
+  }
+
+  function paintPhoneChrome(id) {
+    document.documentElement.classList.toggle("phone-feature", !!FEATURE[id]);
+    var carrier = $("#phone-carrier");
+    if (carrier) {
+      if (id === "nokia3310") carrier.textContent = "NOKIA";
+      else if (id === "razr") carrier.textContent = "MOTOROLA";
+      else if (id === "t28") carrier.textContent = "T28";
+      else if (id === "gzone") carrier.textContent = "G'zOne";
+      else if (id === "ios") carrier.textContent = "5G";
+      else if (id === "pixel" || id === "iphone") carrier.textContent = "";
+      else carrier.textContent = "Carrier";
+    }
+    if (lastPhoneClockText) {
+      $all("#phone-time").forEach(function (n) { n.textContent = lastPhoneClockText; });
+    }
+  }
+
+  function renderPhoneHome(eraOpt) {
+    var home = $("#phone-home");
+    if (!home) return;
+    var era = eraOpt || currentEra();
+    var id = era.id;
+    phoneFocus = Math.min(phoneFocus, SITE.apps.length - 1);
+    if (id === "gzone") {
+      /* Text-only grid — modern plugin glyphs look wrong on a feature phone */
+      home.className = "phone-home phone-home-grid phone-home-textgrid";
+      home.innerHTML = "<div class='phone-grid'>" + SITE.apps.map(function (app, i) {
+        return "<button type='button' class='phone-grid-item" + (i === phoneFocus ? " focus" : "") + "' data-app='" + app.id + "' data-i='" + i + "'>" +
+          "<span class='label'>" + app.name + "</span></button>";
+      }).join("") + "</div>";
+    } else if (FEATURE[id]) {
+      home.className = "phone-home phone-home-list";
+      home.innerHTML = "<ul class='phone-list'>" + SITE.apps.map(function (app, i) {
+        return "<li class='phone-list-item" + (i === phoneFocus ? " focus" : "") + "' data-app='" + app.id + "' data-i='" + i + "'>" +
+          "<button type='button' data-app='" + app.id + "'>" +
+          "<span class='phone-num'>" + (i + 1) + ".</span> " + app.name + "</button></li>";
+      }).join("") + "</ul>";
+    } else {
+      home.className = "phone-home phone-home-icons" + (id === "ios" ? " phone-home-ios" : "");
+      var useDock = (id === "ios" || id === "pixel");
+      var isIos = id === "ios";
+      /* iOS: Weather|Calendar; LinkedIn+X stacked under Weather. Dock = first 4. */
+      var dockApps = useDock ? SITE.apps.slice(0, 4) : null;
+      var sideApps = isIos
+        ? SITE.apps.filter(function (a) { return a.id === "linkedin" || a.id === "x"; })
+        : [];
+      var gridApps = isIos ? [] : (useDock ? SITE.apps.slice(4) : SITE.apps);
+      function iconBtn(app, dock) {
+        return "<button type='button' class='phone-icon i-" + app.id + (dock ? " phone-dock-icon" : "") + "' data-app='" + app.id + "'>" +
+          window.ICONS.wrap(app.id) + (dock ? "" : "<span class='label'>" + app.name + "</span>") + "</button>";
+      }
+      var html = "";
+      if (isIos) {
+        var now = new Date();
+        var dow = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/Denver" }).format(now).toUpperCase();
+        var dom = new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone: "America/Denver" }).format(now);
+        html += "<div class='phone-widgets'>" +
+          "<div class='phone-widget-stack'>" +
+            "<div class='phone-widget phone-widget-weather' aria-hidden='true'>" +
+              "<div class='phone-widget-face'>" +
+                "<div class='pw-loc'>Denver</div>" +
+                "<div class='pw-temp'>72°</div>" +
+                "<div class='pw-cond'>Partly Cloudy</div>" +
+                "<div class='pw-hl'>H:78° L:55°</div>" +
+              "</div>" +
+              "<span class='phone-widget-label'>Weather</span>" +
+            "</div>" +
+            "<div class='phone-widget-side'>" + sideApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>" +
+          "</div>" +
+          "<div class='phone-widget phone-widget-cal' aria-hidden='true'>" +
+            "<div class='phone-widget-face'>" +
+              "<div class='pw-dow'>" + dow + "</div>" +
+              "<div class='pw-dom'>" + dom + "</div>" +
+              "<div class='pw-events'>No Events Today</div>" +
+            "</div>" +
+            "<span class='phone-widget-label'>Calendar</span>" +
+          "</div>" +
+        "</div>";
+      }
+      if (gridApps.length) {
+        html += "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
+      }
+      if (dockApps) {
+        html += "<div class='phone-pages' aria-hidden='true'><span class='on'></span></div>";
+        if (isIos) {
+          html += "<button type='button' class='phone-search' aria-hidden='true' tabindex='-1'>" +
+            "<span class='phone-search-ico' aria-hidden='true'></span>Search</button>";
+        }
+        html += "<div class='phone-dock'>" + dockApps.map(function (app) { return iconBtn(app, true); }).join("") + "</div>";
+      }
+      home.innerHTML = html;
+    }
+    home.hidden = !!phoneOpenId;
+    $all("[data-app]", home).forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var appId = el.getAttribute("data-app");
+        var i = Number(el.getAttribute("data-i"));
+        if (!isNaN(i)) phoneFocus = i;
+        if (isFeaturePhone() && !phoneOpenId) {
+          phoneFocus = SITE.apps.findIndex(function (a) { return a.id === appId; });
+          renderPhoneHome();
+          openPhoneSheet(appId);
+        } else {
+          openApp(appId);
+        }
+      });
+    });
+  }
+
+  function bindPhoneChrome() {
+    var back = $("#phone-back");
+    var homeBtn = $("#phone-home-btn");
+    var skL = $("#phone-sk-l");
+    var skC = $("#phone-sk-c");
+    var skR = $("#phone-sk-r");
+    function goBack() {
+      if (phoneOpenId) closePhoneSheet();
+    }
+    function doSelect() {
+      if (phoneOpenId) return;
+      var app = SITE.apps[phoneFocus];
+      if (app) openPhoneSheet(app.id);
+    }
+    if (back) back.addEventListener("click", function (e) { e.stopPropagation(); goBack(); });
+    if (homeBtn) homeBtn.addEventListener("click", function (e) { e.stopPropagation(); closePhoneSheet(); });
+    var gesture = $(".phone-gesture");
+    if (gesture) gesture.addEventListener("click", function (e) { e.stopPropagation(); closePhoneSheet(); });
+    if (skL) skL.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (phoneOpenId) goBack();
+    });
+    if (skC) skC.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (!phoneOpenId) doSelect();
+    });
+    if (skR) skR.addEventListener("click", function (e) { e.stopPropagation(); });
+  }
+
+  function setPhoneVisibility(on) {
+    var phone = $("#phone");
+    if (phone) phone.hidden = !on;
+  }
+
   function openApp(id) {
+    if (phoneMode) {
+      openPhoneSheet(id);
+      return;
+    }
     var win = $(".window[data-win='" + id + "']");
     if (!win) return;
     if (usesLauncher()) {
@@ -192,6 +439,10 @@
   }
 
   function closeApp(id) {
+    if (phoneMode) {
+      closePhoneSheet();
+      return;
+    }
     var win = $(".window[data-win='" + id + "']");
     if (win) {
       win.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
@@ -202,6 +453,10 @@
   }
 
   function backToLauncher() {
+    if (phoneMode) {
+      closePhoneSheet();
+      return;
+    }
     $all(".window.open").forEach(function (w) {
       w.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
       resetWindowGeometry(w);
@@ -246,6 +501,7 @@
     return "";
   }
   var lastClockText = "";
+  var lastPhoneClockText = "";
   function paintChrome(id) {
     var menubar = $("#menubar"), panel = $("#panel-top");
     if (menubar) menubar.innerHTML = menubarHtml(id);
@@ -259,12 +515,22 @@
     });
   }
 
-  function render() {
+  function rebuildTicks() {
     var ticks = $("#tm-ticks");
     ticks.innerHTML = eras.map(function (e, i) {
-      var left = 3 + (i / (eras.length - 1)) * 94;
+      var left = eras.length === 1 ? 50 : 5 + (i / (eras.length - 1)) * 90;
       return "<button type='button' class='tm-tick' data-i='" + i + "' style='left:" + left + "%'><i></i>" + e.short + "</button>";
     }).join("");
+    $all(".tm-tick").forEach(function (t) {
+      var i = Number(t.getAttribute("data-i"));
+      t.addEventListener("click", function () { applyEra(i, true); });
+      t.addEventListener("mouseenter", function () { paintEra(i); });
+      t.addEventListener("focus", function () { paintEra(i); });
+    });
+  }
+
+  function render() {
+    rebuildTicks();
 
     var board = $("#board");
     var dock = $("#dock");
@@ -347,9 +613,10 @@
       return "<button type='button' data-app='" + app.id + "'>" + app.name + "</button>";
     }).join("");
 
-    paintChrome(currentEra().id);
+    if (!phoneMode) paintChrome(currentEra().id);
 
     $all("[data-app]").forEach(function (el) {
+      if (el.closest("#phone")) return;
       el.addEventListener("click", function (e) {
         e.stopPropagation();
         openApp(el.getAttribute("data-app"));
@@ -397,6 +664,19 @@
       $("#start-menu").classList.toggle("open");
     });
     document.addEventListener("click", function () { $("#start-menu").classList.remove("open"); });
+
+    bindPhoneChrome();
+    renderPhoneHome();
+    setPhoneVisibility(phoneMode);
+    (function applyEraQuery() {
+      try {
+        var q = new URLSearchParams(location.search).get("era");
+        if (!q) return;
+        var list = phoneMode ? SITE.phoneEras : SITE.eras;
+        var hit = list.find(function (e) { return e.id === q; });
+        if (hit) applyEra(hit.id);
+      } catch (err) {}
+    })();
   }
 
   function bindTimeMachine() {
@@ -407,12 +687,7 @@
       try { track.setPointerCapture(e.pointerId); } catch (err) {}
       applyEra(eraFromClientX(e.clientX), true);
     });
-    $all(".tm-tick").forEach(function (t) {
-      var i = Number(t.getAttribute("data-i"));
-      t.addEventListener("click", function () { applyEra(i, true); });
-      t.addEventListener("mouseenter", function () { paintEra(i); });
-      t.addEventListener("focus", function () { paintEra(i); });
-    });
+    rebuildTicks();
     track.addEventListener("mouseleave", function () { if (!tmDrag) paintEra(eraIndex); });
     track.addEventListener("focusout", function () { paintEra(eraIndex); });
     track.addEventListener("pointermove", function (e) {
@@ -432,21 +707,87 @@
     window.addEventListener("resize", function () { paintEra(eraIndex); });
   }
 
+  function applyDeviceMode(on) {
+    phoneMode = on;
+    eras = activeEras();
+    document.documentElement.dataset.device = deviceKind();
+    var tmTrack = $("#tm-track");
+    if (tmTrack) tmTrack.setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
+    if (!phoneMode) document.documentElement.classList.remove("phone-feature", "phone-app-open");
+    setPhoneVisibility(phoneMode);
+    if (phoneMode) {
+      $all(".window.open").forEach(function (w) {
+        w.classList.remove("open", "front", "zoomed", "hypr", "omarchy-pop", "pop-pop");
+        resetWindowGeometry(w);
+      });
+      showGoMenu(false);
+      showActivities(false);
+    } else {
+      closePhoneSheet();
+    }
+    rebuildTicks();
+    var startId = defaultEraId();
+    var idx = 0;
+    eras.forEach(function (e, i) { if (e.id === startId) idx = i; });
+    applyEra(idx, false);
+  }
+
+  function bindPhoneMode() {
+    document.documentElement.dataset.device = deviceKind();
+    var tmTrack0 = $("#tm-track");
+    if (tmTrack0) tmTrack0.setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
+    setPhoneVisibility(phoneMode);
+    var onChange = function (e) { applyDeviceMode(e.matches); };
+    if (phoneMq.addEventListener) phoneMq.addEventListener("change", onChange);
+    else if (phoneMq.addListener) phoneMq.addListener(onChange);
+  }
+
   function tickClock() {
     var fmt = new Intl.DateTimeFormat("en-US", {
       weekday: "short", hour: "numeric", minute: "2-digit", hour12: true,
+      timeZone: "America/Denver"
+    });
+    var phoneFmt = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric", minute: "2-digit", hour12: true,
       timeZone: "America/Denver"
     });
     function go() {
       var t = fmt.format(new Date()).replace(",", "");
       lastClockText = t;
       $all("#clock, .panel-clock").forEach(function (n) { n.textContent = t; });
+      var pt = phoneFmt.format(new Date());
+      lastPhoneClockText = pt;
+      $all("#phone-time").forEach(function (n) { n.textContent = pt; });
     }
     go();
     setInterval(go, 30000);
   }
 
   document.addEventListener("keydown", function (e) {
+    if (phoneMode) {
+      if (e.key === "Escape") {
+        if (phoneOpenId) { e.preventDefault(); closePhoneSheet(); }
+        return;
+      }
+      if (isFeaturePhone() && !phoneOpenId) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          phoneFocus = Math.min(SITE.apps.length - 1, phoneFocus + 1);
+          renderPhoneHome();
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          phoneFocus = Math.max(0, phoneFocus - 1);
+          renderPhoneHome();
+        }
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var app = SITE.apps[phoneFocus];
+          if (app) openPhoneSheet(app.id);
+        }
+      }
+      return;
+    }
     if (!usesLauncher()) return;
     if (e.key === "Escape") {
       if ($(".window.open")) { e.preventDefault(); backToLauncher(); }
@@ -468,13 +809,14 @@
     }
   });
 
+  bindPhoneMode();
   render();
   bindTimeMachine();
   tickClock();
 
   var q = new URLSearchParams(location.search).get("era");
-  var start = SITE.defaultEra;
-  if (q) start = q;
+  var start = defaultEraId();
+  if (q && eras.some(function (e) { return e.id === q; })) start = q;
   var idx = 0;
   eras.forEach(function (e, i) { if (e.id === start) idx = i; });
   applyEra(idx, false);

@@ -1,0 +1,488 @@
+/* Current iOS — Dynamic Island, widgets, frosted Search + dock, depth wallpaper */
+[data-era="ios"] body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; font-size: 14px; }
+[data-era="ios"] .os { background: #000; color: #fff; }
+[data-era="ios"] .desktop { background: #0a080c; }
+
+[data-era="ios"] .phone-bezel {
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  max-width: none;
+  box-shadow: none;
+  padding-bottom: 0;
+}
+
+
+[data-era="ios"] .phone-island {
+  display: block;
+  top: 11px;
+  width: 126px;
+  height: 36px;
+  border-radius: 22px;
+  background: #000;
+  box-shadow: 0 4px 14px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.07);
+  z-index: 6;
+}
+[data-era="ios"] .phone-island::before,
+[data-era="ios"] .phone-island::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #1a1a1e;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+[data-era="ios"] .phone-island::before {
+  left: 22px;
+  width: 10px; height: 10px;
+  background: radial-gradient(circle at 40% 35%, #2a3344, #0a0c12 70%);
+}
+[data-era="ios"] .phone-island::after {
+  right: 18px;
+  width: 8px; height: 8px;
+  background: radial-gradient(circle at 40% 35%, #1e2430, #050608 70%);
+}
+
+/* Status: time LEFT · signal / 5G / battery RIGHT */
+[data-era="ios"] .phone-status {
+  color: #fff;
+  background: transparent;
+  padding: 14px 16px 6px;
+  font: 600 15px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.02em;
+  z-index: 4;
+  gap: 6px;
+}
+[data-era="ios"] .phone-time {
+  order: 1;
+  margin-right: auto;
+  font-weight: 600;
+}
+[data-era="ios"] .phone-carrier {
+  opacity: 1;
+  width: auto;
+  order: 2;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 14px;
+  flex: 0 0 auto;
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.01em;
+}
+[data-era="ios"] .phone-carrier::before {
+  content: "";
+  display: block;
+  width: 18px; height: 10px;
+  flex: 0 0 auto;
+  background:
+    linear-gradient(#fff, #fff) 0 100% / 3px 4px no-repeat,
+    linear-gradient(#fff, #fff) 5px 100% / 3px 6px no-repeat,
+    linear-gradient(#fff, #fff) 10px 100% / 3px 8px no-repeat,
+    linear-gradient(#fff, #fff) 15px 100% / 3px 10px no-repeat;
+  opacity: .95;
+}
+[data-era="ios"] .phone-batt {
+  order: 3;
+  width: 25px; height: 12px;
+  border-radius: 3px;
+  border-width: 1.5px;
+  flex: 0 0 auto;
+}
+
+/* Depth wallpaper: gold → purple / charcoal silk waves (not solid charcoal) */
+[data-era="ios"] .phone-screen {
+  color: #fff;
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse 95% 55% at 8% 8%, rgba(232, 190, 120, .62), transparent 52%),
+    radial-gradient(ellipse 70% 48% at 88% 18%, rgba(168, 120, 72, .42), transparent 55%),
+    radial-gradient(ellipse 85% 55% at 72% 72%, rgba(110, 70, 150, .48), transparent 58%),
+    radial-gradient(ellipse 75% 50% at 18% 88%, rgba(60, 40, 70, .55), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 50% 45%, rgba(90, 55, 120, .28), transparent 60%),
+    linear-gradient(168deg, #4a3824 0%, #2c2038 28%, #1a1424 58%, #100e14 100%);
+}
+[data-era="ios"] .phone-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 40% at 30% 35%, transparent 40%, rgba(20, 14, 28, .35) 70%, transparent 100%),
+    radial-gradient(ellipse 90% 35% at 80% 55%, rgba(200, 160, 90, .18), transparent 60%),
+    radial-gradient(ellipse 100% 30% at 40% 80%, rgba(80, 50, 110, .25), transparent 65%);
+  opacity: .95;
+}
+[data-era="ios"] .phone-screen > * { position: relative; z-index: 1; }
+
+/* Fit home in the viewport — no page scrollbar; dock stays pinned */
+[data-era="ios"] .phone-home {
+  padding: 2px 12px 0;
+  background: transparent;
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+[data-era="ios"] .phone-screen {
+  overflow: hidden;
+}
+
+/* Phone-only iOS home — fixed tile size (not fluid). */
+[data-era="ios"] .phone-home-ios {
+  --ios-gap: 12px;
+  --ios-tile: 158px;
+  --ios-col: calc(var(--ios-tile) * 2 + var(--ios-gap)); /* 328 */
+  width: 100%;
+  max-width: 360px;
+  margin-inline: auto;
+  padding: 8px 16px 0;
+  box-sizing: border-box;
+}
+[data-era="ios"] .phone-widgets {
+  display: grid;
+  grid-template-columns: var(--ios-tile) var(--ios-tile);
+  column-gap: var(--ios-gap);
+  row-gap: 12px;
+  padding: 4px 0 6px;
+  width: var(--ios-col);
+  margin-inline: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  align-content: start;
+  justify-content: center;
+  align-items: start;
+  justify-items: stretch;
+}
+[data-era="ios"] .phone-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  width: var(--ios-tile);
+}
+[data-era="ios"] .phone-widget-face {
+  width: var(--ios-tile);
+  height: var(--ios-tile);
+  border-radius: 22px;
+  padding: 10px 10px 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.35),
+    0 1px 2px rgba(0,0,0,.2),
+    inset 0 1px 0 rgba(255,255,255,.18);
+  overflow: hidden;
+}
+
+
+/* LinkedIn + X stacked under Weather (left column) */
+[data-era="ios"] .phone-widget-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: var(--ios-tile);
+}
+[data-era="ios"] .phone-widget-side {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 8px;
+  width: var(--ios-tile);
+}
+[data-era="ios"] .phone-widget-side .phone-icon {
+  flex: 0 0 auto;
+  width: 60px;
+}
+[data-era="ios"] .phone-widget-side .phone-icon .label {
+  text-align: center;
+  width: 60px;
+  font-size: 10px;
+}
+
+[data-era="ios"] .phone-widget-weather .phone-widget-face {
+  background:
+    linear-gradient(160deg, #3a3a42 0%, #2a2a32 45%, #1e1e26 100%);
+  color: #fff;
+}
+[data-era="ios"] .phone-widget-cal .phone-widget-face {
+  background: #f5f5f7;
+  color: #1c1c1e;
+}
+[data-era="ios"] .pw-loc {
+  font: 600 13px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: .95;
+}
+[data-era="ios"] .pw-temp {
+  font: 300 52px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.04em;
+  margin-top: 4px;
+}
+[data-era="ios"] .pw-cond {
+  font: 500 13px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  margin-top: auto;
+  opacity: .92;
+}
+[data-era="ios"] .pw-hl {
+  font: 500 12px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: .75;
+  margin-top: 2px;
+}
+[data-era="ios"] .pw-dow {
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #e54b4b;
+  letter-spacing: .04em;
+}
+[data-era="ios"] .pw-dom {
+  font: 300 56px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.04em;
+  color: #1c1c1e;
+  margin-top: 2px;
+}
+[data-era="ios"] .pw-events {
+  font: 500 13px/1.25 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #8e8e93;
+  margin-top: auto;
+}
+[data-era="ios"] .phone-widget-label {
+  font: 500 11px/1.15 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+
+[data-era="ios"] .phone-home-icons .phone-icons {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 8px;
+  padding: 4px 14px 0;
+  justify-items: center;
+  flex: 0 0 auto;
+}
+[data-era="ios"] .phone-home-ios .phone-icons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 8px;
+  padding: 8px 4px 0;
+  justify-items: center;
+  flex: 0 0 auto;
+}
+[data-era="ios"] .phone-icon .glyph-wrap {
+  width: 60px; height: 60px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.4),
+    0 1px 2px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.28);
+}
+[data-era="ios"] .phone-icon .label {
+  font: 500 11px/1.15 -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+[data-era="ios"] .i-github .glyph-wrap,
+[data-era="ios"] .i-omarchy .glyph-wrap { background: #000; }
+
+[data-era="ios"] .phone-pages {
+  display: flex;
+  margin-top: auto;
+  padding-top: 14px;
+  padding-bottom: 10px;
+}
+[data-era="ios"] .phone-pages span {
+  width: 7px; height: 7px;
+  background: rgba(255,255,255,.85);
+}
+
+/* Translucent Search pill (decorative) */
+[data-era="ios"] .phone-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: center;
+  width: min(168px, 55%);
+  margin: 0 auto 12px;
+  padding: 9px 18px;
+  border: 0.5px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  background: rgba(255,255,255,.16);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  color: rgba(255,255,255,.92);
+  font: 500 15px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 10px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18);
+  cursor: default;
+}
+[data-era="ios"] .phone-search-ico {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 1.8px solid currentColor;
+  border-radius: 50%;
+  position: relative;
+  opacity: .9;
+  flex: 0 0 auto;
+}
+[data-era="ios"] .phone-search-ico::after {
+  content: "";
+  position: absolute;
+  width: 6px; height: 1.8px;
+  background: currentColor;
+  border-radius: 1px;
+  right: -4px; bottom: -1px;
+  transform: rotate(45deg);
+}
+
+
+[data-era="ios"] .phone-pages,
+[data-era="ios"] .phone-search,
+[data-era="ios"] .phone-dock {
+  flex: 0 0 auto;
+}
+[data-era="ios"] .pw-temp {
+  font-size: clamp(28px, 8vh, 48px);
+}
+[data-era="ios"] .pw-dom {
+  font-size: clamp(32px, 9vh, 52px);
+}
+[data-era="ios"] .phone-dock {
+  display: flex;
+  width: var(--ios-col);
+  max-width: 100%;
+  align-self: center;
+  box-sizing: border-box;
+  background: rgba(255,255,255,.2);
+  backdrop-filter: blur(32px) saturate(170%);
+  -webkit-backdrop-filter: blur(32px) saturate(170%);
+  border: 0.5px solid rgba(255,255,255,.28);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.32),
+    0 2px 6px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.28);
+  padding: clamp(10px, 1.6vh, 14px) 16px;
+  margin: 0 0 6px;
+  border-radius: 34px;
+}
+[data-era="ios"] .phone-dock .glyph-wrap {
+  width: clamp(48px, 7vh, 56px);
+  height: clamp(48px, 7vh, 56px);
+  border-radius: 15px;
+}
+
+/* Full-screen app open — covers home + status, island stays above */
+[data-era="ios"] .phone-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: #000;
+  color: #fff;
+  border-radius: 0;
+  padding-top: 54px; /* clear Dynamic Island / status */
+  padding-bottom: 28px; /* clear home indicator */
+  transform: translateY(8%) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .38s cubic-bezier(.2,.8,.2,1), opacity .28s ease;
+}
+[data-era="ios"] .phone-sheet.is-open,
+html.phone-app-open[data-era="ios"] .phone-sheet.is-open {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+[data-era="ios"] .phone-sheet[hidden] {
+  display: flex !important; /* keep for transition; hide via opacity when closed */
+  visibility: hidden;
+  pointer-events: none;
+}
+html.phone-app-open[data-era="ios"] .phone-sheet[hidden] {
+  /* when openPhoneSheet clears hidden, shown */
+}
+html.phone-app-open[data-era="ios"] .phone-home {
+  visibility: hidden;
+}
+html.phone-app-open[data-era="ios"] .phone-status {
+  z-index: 9;
+  color: #fff;
+}
+html.phone-app-open[data-era="ios"] .phone-island {
+  z-index: 10;
+}
+html.phone-app-open[data-era="ios"] .phone-gesture {
+  z-index: 11;
+  position: relative;
+}
+[data-era="ios"] .phone-sheet-bar {
+  background: #000;
+  border-bottom: 0;
+  color: #fff;
+  padding: 8px 16px 10px;
+  position: relative;
+  justify-content: flex-start;
+  min-height: 44px;
+}
+[data-era="ios"] .phone-back {
+  color: #0a84ff;
+  font: 400 17px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 8px 4px;
+}
+[data-era="ios"] .phone-back::before {
+  content: "‹";
+  margin-right: 2px;
+  font-size: 28px;
+  line-height: 0.7;
+  vertical-align: -2px;
+}
+[data-era="ios"] .phone-sheet-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 55%;
+  text-align: center;
+  font: 600 17px/1.2 -apple-system, BlinkMacSystemFont, sans-serif;
+  pointer-events: none;
+}
+[data-era="ios"] .phone-sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px 20px 24px;
+  background: #000;
+  font-size: 16px;
+  line-height: 1.45;
+}
+[data-era="ios"] .phone-sheet-body .pane { max-width: 100%; }
+[data-era="ios"] .phone-sheet-body h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 8px 0 12px;
+}
+[data-era="ios"] .btn {
+  background: #0a84ff; color: #fff; border: 0; border-radius: 12px;
+  padding: 10px 16px; font-weight: 600;
+}
+[data-era="ios"] .folder a {
+  border-radius: 12px; background: rgba(44,44,46,.9); margin-bottom: 6px;
+}
+[data-era="ios"] .about-pane .headshot { border-radius: 50%; }
+[data-era="ios"] .phone-gesture {
+  display: block;
+  background: rgba(255,255,255,.55);
+  width: 134px; height: 5px;
+  margin: 6px auto 12px;
+}
+[data-era="ios"] .phone-softkeys,
+[data-era="ios"] .phone-home-btn,
+[data-era="ios"] .phone-earpiece { display: none; }

@@ -77,5 +77,20 @@ window.SITE = {
     { id: "macos",   name: "MacOS",          short: "MacOS" },
     { id: "omarchy", name: "Omarchy",        short: "Omarchy" }
   ],
-  defaultEra: "omarchy"
+  defaultEra: "omarchy",
+  phoneEras: [
+    { id: "t28",       name: "Ericsson T28", short: "T28" },
+    { id: "nokia3310", name: "Nokia 3310",   short: "3310" },
+    { id: "razr",      name: "Motorola Razr", short: "Razr" },
+    { id: "gzone",     name: "Casio G'zOne", short: "G'zOne" },
+    { id: "iphone",    name: "iPhone",       short: "iPhone" },
+    { id: "pixel",     name: "Google Pixel", short: "Pixel" },
+    { id: "ios",       name: "iOS",          short: "iOS" }
+  ],
+  defaultPhoneEra: "ios",
+  /* Discrete layouts — not fluid. Phone eras only on phone. */
+  phoneMax: 480,       /* ≤480: phone eras + phone chrome */
+  desktopMin: 1024,    /* ≥1024: desktop; 481–1023: tablet (same desktop eras) */
+  phoneBreakpoint: 480 /* alias used by matchMedia (≤480) */
 };
+

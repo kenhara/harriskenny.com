@@ -46,18 +46,21 @@ button, a { cursor: pointer; }
   font: 10px/1 ui-sans-serif, system-ui, sans-serif;
 }
 .tm-tick i {
-  display: block; width: 7px; height: 7px; margin: 10px 0 6px;
+  display: block; width: 6px; height: 6px; margin: 11px 0 7px;
   border-radius: 50%; background: #3a342c; box-shadow: 0 0 0 1px #000;
+  transition: opacity .15s ease;
 }
-.tm-tick.on { color: #f3ead2; }
-.tm-tick.on i { background: #f3ead2; }
+.tm-tick.on { color: #fff4d5; }
+.tm-tick.on i { opacity: 0; } /* handle is the active marker */
+.tm-tick .label-gap { display: none; }
 .tm-handle {
-  position: absolute; top: 5px; width: 18px; height: 18px;
-  margin-left: -9px;
+  position: absolute; top: 6px; width: 14px; height: 14px;
+  margin-left: -7px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #fff6d8, #c9a227 55%, #6a4a10);
-  box-shadow: 0 0 0 1px #000, 0 2px 6px rgba(0,0,0,.6);
+  box-shadow: 0 0 0 1px #000, 0 2px 6px rgba(0,0,0,.55), 0 0 10px rgba(201,162,39,.35);
   pointer-events: none;
+  z-index: 2;
 }
 
 .os { position: absolute; inset: var(--tm) 0 0 0; display: flex; flex-direction: column; }
@@ -290,4 +293,294 @@ button, a { cursor: pointer; }
   border-radius: 6px;
   outline: 1px solid #2a303a;
   background: #1a1d24;
+}
+
+/* —— Phone device shell (layout). Colors live in themes/*.css —— */
+[data-device="phone"] .board,
+[data-device="phone"] .dock,
+[data-device="phone"] .taskbar,
+[data-device="phone"] .go-menu,
+[data-device="phone"] .activities,
+[data-device="phone"] .menubar,
+[data-device="phone"] .panel-top,
+[data-device="phone"] #windows,
+[data-device="phone"] .start-menu { display: none !important; }
+
+[data-device="phone"] .phone { display: flex; }
+.phone {
+  display: none;
+  position: absolute; inset: 0;
+  align-items: stretch; justify-content: stretch;
+  z-index: 2;
+  padding: 0;
+}
+/* Full-bleed mobile UI — no simulated device frame. Breakpoint: SITE.phoneBreakpoint. */
+.phone-bezel {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  display: flex; flex-direction: column;
+  border-radius: 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+.phone-earpiece { display: none !important; }
+.phone-island {
+  display: none;
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 96px; height: 28px; border-radius: 20px; background: #000; z-index: 5;
+}
+.phone-status {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px 4px; font: 600 11px/1 ui-sans-serif, system-ui, sans-serif;
+  color: #fff; flex: 0 0 auto; gap: 8px; z-index: 4;
+}
+.phone-carrier { flex: 1; min-width: 0; opacity: .9; }
+.phone-time { flex: 0 0 auto; }
+.phone-batt {
+  flex: 0 0 auto; width: 22px; height: 10px;
+  border: 1.5px solid currentColor; border-radius: 2px; position: relative; opacity: .9;
+}
+.phone-batt::after {
+  content: ""; position: absolute; inset: 1.5px 3px 1.5px 1.5px; background: currentColor;
+}
+.phone-batt::before {
+  content: ""; position: absolute; right: -3px; top: 2px; width: 2px; height: 4px;
+  background: currentColor; border-radius: 0 1px 1px 0;
+}
+.phone-screen {
+  position: relative; flex: 1; min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.phone-home {
+  flex: 1; min-height: 0; overflow: auto;
+  padding: 8px 10px 12px;
+}
+.phone-home-list .phone-list { list-style: none; margin: 0; padding: 0; }
+.phone-list-item button {
+  display: block; width: 100%; text-align: left;
+  background: none; border: 0; color: inherit; font: inherit;
+  padding: 8px 6px;
+}
+.phone-list-item.focus,
+.phone-list-item.focus button { outline: none; }
+.phone-num { opacity: .7; margin-right: 4px; }
+.phone-home-grid .phone-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 6px;
+}
+.phone-grid-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: 0; color: inherit; font: 11px/1.2 ui-sans-serif, system-ui, sans-serif;
+  padding: 8px 4px;
+}
+.phone-grid-item .glyph-wrap { width: 40px; height: 40px; }
+.phone-grid-item .glyph { width: 40px; height: 40px; }
+.phone-grid-item .label { text-align: center; max-width: 72px; font-size: 10px; }
+.phone-home-icons .phone-icons {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 8px;
+  padding: 12px 8px 20px;
+}
+.phone-icon {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: none; border: 0; color: inherit; font: 11px/1.15 ui-sans-serif, system-ui, sans-serif;
+  padding: 0;
+}
+.phone-icon .glyph-wrap {
+  width: 56px; height: 56px; border-radius: 14px; overflow: hidden;
+  display: grid; place-items: center;
+}
+.phone-icon .glyph { width: 56px; height: 56px; }
+.phone-icon .glyph-logo { width: 70%; height: 70%; }
+.phone-icon .i-outboundsync .glyph-logo,
+.phone-icon.i-outboundsync .glyph-logo,
+.phone-icon.i-linkedin .glyph-logo,
+.phone-icon.i-x .glyph-logo { width: 100%; height: 100%; }
+.phone-icon .label { text-align: center; max-width: 72px; font-size: 11px; }
+.phone-icon .dos-file { display: none; }
+
+
+.phone-home.phone-home-icons {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  padding-bottom: 4px;
+  overflow: hidden;
+}
+.phone-pages {
+  display: none;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 0 12px;
+}
+.phone-pages span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.28);
+}
+.phone-pages span.on { background: rgba(255,255,255,.85); }
+.phone-dock {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 28px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 4px;
+}
+.phone-dock .phone-icon .label { display: none; }
+.phone-dock .glyph-wrap { width: 56px; height: 56px; }
+
+.phone-widgets { display: none; }
+.phone-search { display: none; }
+.phone-home-ios .phone-widgets { display: grid; }
+.phone-home-ios .phone-search { display: flex; }
+
+/* Feature phones: softkeys own Back — avoid duplicate with sheet-bar */
+html.phone-feature .phone-back { display: none !important; }
+/* Feature phones: no modern app/plugin artwork in sheets or menus */
+html.phone-feature .phone-sheet-body .folder .glyph,
+html.phone-feature .phone-sheet-body .folder .glyph-wrap,
+html.phone-feature .phone-sheet-body .glyph-photo,
+html.phone-feature .phone-sheet-body .glyph-logo,
+html.phone-feature .phone-home .glyph-wrap { display: none !important; }
+html.phone-feature .phone-sheet-body .folder a { gap: 0; }
+html.phone-feature .phone-sheet-body {
+  font-size: 15px;
+  line-height: 1.45;
+}
+html.phone-feature .phone-sheet-title { font-size: 16px; }
+html.phone-feature .phone-list-item button { font-size: 15px; line-height: 1.4; padding: 8px 6px; }
+
+
+.phone-sheet {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  background: #fff; color: #111; z-index: 6;
+}
+.phone-sheet[hidden] { display: none !important; }
+/* Default (non-iOS): sheet covers the screen area only via bezel stacking — home stays under */
+.phone-bezel { position: relative; }
+.phone-sheet-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; flex: 0 0 auto;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+}
+.phone-back {
+  background: none; border: 0; color: inherit; font: 600 14px/1 ui-sans-serif, system-ui, sans-serif;
+  padding: 6px 4px;
+}
+.phone-sheet-title {
+  flex: 1; text-align: center; font: 600 15px/1.2 ui-sans-serif, system-ui, sans-serif;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.phone-sheet-body {
+  flex: 1; min-height: 0; overflow: auto; padding: 12px 14px;
+}
+.phone-sheet-body .pane { padding: 0; }
+.phone-sheet-body h1 { font-size: 18px; }
+.phone-sheet-body .headshot { width: 96px; height: 96px; }
+
+.phone-softkeys {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center; justify-content: space-between;
+  padding: 6px 10px 10px; gap: 8px;
+}
+.phone-sk {
+  flex: 1; min-width: 0;
+  background: none; border: 0; color: inherit;
+  font: 600 12px/1 ui-sans-serif, system-ui, sans-serif;
+  padding: 8px 4px;
+}
+.phone-sk-l { text-align: left; }
+.phone-sk-c { text-align: center; }
+.phone-sk-r { text-align: right; }
+
+.phone-home-btn {
+  display: none;
+  flex: 0 0 auto;
+  width: 52px; height: 52px; margin: 8px auto 12px;
+  border-radius: 50%; border: 2px solid #444; background: #1a1a1a;
+  box-shadow: inset 0 0 0 1px #333;
+}
+.phone-gesture {
+  display: none;
+  flex: 0 0 auto;
+  width: 120px; height: 4px; margin: 8px auto 10px;
+  border-radius: 2px; background: rgba(255,255,255,.45);
+}
+
+@media (max-width: 720px) {
+  :root:not([data-device="phone"]) { --tm: 56px; }
+  :root:not([data-device="phone"]) .tm { padding: 0 10px; gap: 8px; height: var(--tm); }
+  :root:not([data-device="phone"]) .tm-title { flex: 0 0 72px; }
+  :root:not([data-device="phone"]) .tm-word { font-size: 9px; letter-spacing: .1em; }
+  :root:not([data-device="phone"]) .tm-title strong { font-size: 11px; }
+  :root:not([data-device="phone"]) .tm-tick { font-size: 8px; }
+  :root:not([data-device="phone"]) .tm-line { left: 10px; right: 10px; }
+}
+
+/* Phone mode Time Machine — title above, full-width thumb-first slider (desktop .tm unchanged) */
+[data-device="phone"] { --tm: 118px; }
+[data-device="phone"] .tm {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  height: var(--tm);
+  gap: 4px;
+  padding: 10px 6px 12px;
+}
+[data-device="phone"] .tm-title {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 0 6px;
+}
+[data-device="phone"] .tm-word {
+  flex: 0 0 auto;
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: #c4b89a;
+}
+[data-device="phone"] .tm-title strong {
+  font-size: 17px;
+  line-height: 1.1;
+  color: #fff4d5;
+}
+[data-device="phone"] .tm-track {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 62px;
+}
+[data-device="phone"] .tm-line {
+  left: 16px; right: 16px; top: 20px; height: 4px;
+  border-radius: 2px;
+}
+[data-device="phone"] .tm-tick {
+  font: 600 11.5px/1.15 ui-sans-serif, system-ui, sans-serif;
+  color: #9a9080;
+  z-index: 1;
+}
+[data-device="phone"] .tm-tick.on {
+  z-index: 3;
+  text-shadow: 0 1px 2px rgba(0,0,0,.65);
+}
+[data-device="phone"] .tm-tick i {
+  width: 8px; height: 8px; margin: 16px 0 10px;
+}
+[data-device="phone"] .tm-handle {
+  /* sit on the 4px line at top:20 → center 22; 22px thumb → top 11 */
+  top: 11px; width: 22px; height: 22px;
+  margin-left: -11px;
+  box-shadow: 0 0 0 1px #000, 0 2px 8px rgba(0,0,0,.5), 0 0 12px rgba(201,162,39,.4);
 }
