@@ -3,11 +3,14 @@
 [data-era="pixel"] .os { background: #0f0f12; color: #e8eaed; }
 [data-era="pixel"] .desktop { background: #12141a; }
 [data-era="pixel"] .phone-bezel {
-  background: #1a1c22;
-  border-radius: 32px;
-  border: 2px solid #2a2c34;
-  max-width: 360px;
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  max-width: none;
+  box-shadow: none;
+  padding-bottom: 0;
 }
+
 [data-era="pixel"] .phone-status {
   color: #e8eaed; background: transparent; padding: 10px 18px 6px;
   font: 500 12px/1 Roboto, system-ui, sans-serif;

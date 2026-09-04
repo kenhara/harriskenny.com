@@ -1,42 +1,81 @@
-/* Casio G'zOne — rugged feature phone, orange accents, 3×3 grid */
-[data-era="gzone"] body { font-family: Tahoma, "Segoe UI", sans-serif; font-size: 13px; }
-[data-era="gzone"] .os { background: #1a1a14; color: #fff; }
-[data-era="gzone"] .desktop { background: #222218; }
+/* Casio G\'zOne — rugged feature phone, orange accents, text grid */
+[data-era="gzone"] body { font-family: Tahoma, "Segoe UI", sans-serif; font-size: 15px; }
+[data-era="gzone"] .os { background: #121210; color: #fff; }
+[data-era="gzone"] .desktop { background: #1a1a14; }
 [data-era="gzone"] .phone-bezel {
-  background: linear-gradient(180deg, #3a3a32, #1e1e18);
-  border-radius: 10px;
-  border: 4px solid #ff6a00;
-  max-width: 300px;
-  box-shadow: inset 0 0 0 2px #111, 0 0 0 1px #8a3a00;
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  max-width: none;
+  box-shadow: none;
+  padding-bottom: 0;
 }
+
 [data-era="gzone"] .phone-status {
-  color: #ffe0c0; background: #2a2a22; padding: 4px 8px;
-  font: 700 10px/1 Tahoma, sans-serif; border-bottom: 2px solid #ff6a00;
+  color: #ffc080; background: #1a1a14; padding: 8px 10px;
+  font: 700 13px/1 Tahoma, sans-serif;
+  border-bottom: 2px solid #e85a00;
+  letter-spacing: .04em;
 }
-[data-era="gzone"] .phone-screen { background: #1a1a14; color: #eee; }
+[data-era="gzone"] .phone-carrier { color: #ff8a20; text-transform: none; font-size: 13px; }
+[data-era="gzone"] .phone-time { font-size: 13px; }
+[data-era="gzone"] .phone-screen { background: #141410; color: #eee; }
+[data-era="gzone"] .phone-home { padding: 10px 8px; }
+[data-era="gzone"] .phone-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 4px;
+}
 [data-era="gzone"] .phone-grid-item {
-  background: #2a2a22; border: 1px solid #ff6a00; border-radius: 4px;
+  background: #24241c;
+  border: 1px solid #e85a00;
+  border-radius: 4px;
+  color: #ffe0c0;
+  padding: 16px 10px;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,140,40,.15);
+}
+[data-era="gzone"] .phone-grid-item .label {
+  font: 700 14px/1.25 Tahoma, sans-serif;
+  letter-spacing: .01em;
   color: #ffe8d0;
+  text-align: center;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 100%;
+  text-transform: none;
 }
 [data-era="gzone"] .phone-grid-item.focus {
-  background: #ff6a00; color: #111;
+  background: #e85a00; color: #111;
+  box-shadow: inset 0 0 0 1px #ffb060;
 }
-[data-era="gzone"] .phone-grid-item .glyph-wrap {
-  background: #111; border-radius: 4px;
-}
+[data-era="gzone"] .phone-grid-item.focus .label { color: #111; }
 [data-era="gzone"] .phone-softkeys {
-  display: flex; background: #2a2a22; color: #ff6a00;
-  border-top: 2px solid #ff6a00;
+  display: flex; background: #1a1a14; color: #ff8a20;
+  border-top: 2px solid #e85a00; padding: 10px 10px 12px;
 }
-[data-era="gzone"] .phone-sheet { background: #1a1a14; color: #eee; }
+[data-era="gzone"] .phone-sk {
+  color: #ff8a20; font: 700 14px/1 Tahoma, sans-serif;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+[data-era="gzone"] .phone-sk-c { color: #ffc080; font-size: 15px; }
+[data-era="gzone"] .phone-sheet { background: #141410; color: #eee; font-size: 15px; }
 [data-era="gzone"] .phone-sheet-bar {
-  background: #2a2a22; border-bottom: 2px solid #ff6a00; color: #ff6a00;
+  background: #1a1a14; border-bottom: 2px solid #e85a00; color: #ff8a20;
+  padding: 12px 12px;
 }
+[data-era="gzone"] .phone-sheet-title { font-size: 16px; font-weight: 700; }
+[data-era="gzone"] .phone-sheet-body { font-size: 15px; line-height: 1.45; }
 [data-era="gzone"] .btn {
-  background: #ff6a00; color: #111; border: 0; border-radius: 3px;
-  padding: 6px 10px; font-weight: 700;
+  background: #e85a00; color: #111; border: 0; border-radius: 2px;
+  padding: 10px 14px; font-weight: 700; font-size: 14px;
 }
-[data-era="gzone"] .folder a { border-bottom: 1px solid rgba(255,106,0,.25); }
+[data-era="gzone"] .folder a { border-bottom: 1px solid rgba(232,90,0,.25); font-size: 15px; }
+[data-era="gzone"] .folder b { font-size: 15px; }
+[data-era="gzone"] .folder em { font-size: 13px; }
 [data-era="gzone"] .phone-home-btn,
 [data-era="gzone"] .phone-gesture,
 [data-era="gzone"] .phone-island,

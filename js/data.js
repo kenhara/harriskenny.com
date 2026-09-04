@@ -88,5 +88,9 @@ window.SITE = {
     { id: "ios",       name: "iOS",          short: "iOS" }
   ],
   defaultPhoneEra: "ios",
-  phoneBreakpoint: 720
+  /* Discrete layouts — not fluid. Phone eras only on phone. */
+  phoneMax: 480,       /* ≤480: phone eras + phone chrome */
+  desktopMin: 1024,    /* ≥1024: desktop; 481–1023: tablet (same desktop eras) */
+  phoneBreakpoint: 480 /* alias used by matchMedia (≤480) */
 };
+

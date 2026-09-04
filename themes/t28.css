@@ -1,42 +1,69 @@
-/* Ericsson T28 — slim flip, mono LCD, numbered menu, softkeys */
-[data-era="t28"] body { font-family: "Courier New", ui-monospace, monospace; font-size: 13px; }
-[data-era="t28"] .os { background: #2a2a2a; color: #111; }
-[data-era="t28"] .desktop { background: #3a3a3a; }
+/* Ericsson T28 — slim flip, mono LCD, numbered text menu (no modern icons) */
+[data-era="t28"] body { font-family: "Courier New", ui-monospace, monospace; font-size: 15px; }
+[data-era="t28"] .os { background: #3a4550; color: #111; }
+[data-era="t28"] .desktop { background: #4a5560; }
 [data-era="t28"] .phone-bezel {
-  background: linear-gradient(180deg, #5a5a5a, #2e2e2e);
-  border-radius: 18px 18px 22px 22px;
-  border: 2px solid #1a1a1a;
-  max-width: 280px;
+  background: transparent;
+  border-radius: 0;
+  border: 0;
+  max-width: none;
+  box-shadow: none;
+  padding-bottom: 0;
 }
+
 [data-era="t28"] .phone-status {
-  color: #111; background: #c8c8b0; padding: 4px 8px;
-  font: 700 10px/1 "Courier New", monospace;
+  color: #0a1018; background: #a8b8a8; padding: 6px 8px;
+  font: 700 12px/1 "Courier New", monospace;
+  letter-spacing: .04em;
+  border-bottom: 1px solid #607060;
 }
-[data-era="t28"] .phone-carrier { text-transform: uppercase; letter-spacing: .06em; }
-[data-era="t28"] .phone-screen { background: #c8c8b0; color: #111; }
-[data-era="t28"] .phone-home { padding: 4px 6px; }
+[data-era="t28"] .phone-carrier {
+  text-transform: uppercase; letter-spacing: .12em; font-size: 12px;
+}
+[data-era="t28"] .phone-time { font-size: 12px; }
+[data-era="t28"] .phone-batt { width: 18px; height: 9px; border-width: 1px; }
+[data-era="t28"] .phone-screen {
+  background: #a8b8a8; color: #0a1018;
+  margin: 0; width: 100%; border: 0; box-shadow: none;
+  max-height: none; flex: 1;
+}
+
+[data-era="t28"] .phone-home { padding: 6px 8px; }
 [data-era="t28"] .phone-list-item button {
-  font: 700 12px/1.3 "Courier New", monospace; padding: 5px 4px;
+  font: 700 14px/1.4 "Courier New", monospace;
+  padding: 8px 4px;
+  letter-spacing: 0;
 }
 [data-era="t28"] .phone-list-item.focus {
-  background: #111; color: #c8c8b0;
+  background: #0a1018; color: #a8b8a8;
 }
 [data-era="t28"] .phone-softkeys {
-  display: flex; background: #3a3a3a; color: #ddd;
-  border-top: 1px solid #111;
+  display: flex; background: #a8b8a8; color: #0a1018;
+  width: 100%; margin: 0; border: 0; border-top: 1px solid #607060;
+  padding: 8px 12px 12px;
 }
-[data-era="t28"] .phone-sheet { background: #c8c8b0; color: #111; }
+
+[data-era="t28"] .phone-sk {
+  font: 700 13px/1 "Courier New", monospace;
+  color: #0a1018; padding: 6px 2px;
+}
+[data-era="t28"] .phone-sheet {
+  background: #a8b8a8; color: #0a1018; font-size: 15px;
+}
 [data-era="t28"] .phone-sheet-bar {
-  background: #a8a890; border-bottom: 1px solid #111;
-  font-family: "Courier New", monospace;
+  background: #90a090; border-bottom: 1px solid #0a1018;
+  font-family: "Courier New", monospace; padding: 10px 8px;
 }
-[data-era="t28"] .phone-back { font: 700 12px/1 "Courier New", monospace; }
-[data-era="t28"] .phone-sheet-title { font: 700 12px/1.2 "Courier New", monospace; }
-[data-era="t28"] .phone-sheet-body { font: 12px/1.35 "Courier New", monospace; }
+[data-era="t28"] .phone-back { font: 700 14px/1 "Courier New", monospace; }
+[data-era="t28"] .phone-sheet-title { font: 700 15px/1.2 "Courier New", monospace; }
+[data-era="t28"] .phone-sheet-body { font: 15px/1.45 "Courier New", monospace; }
 [data-era="t28"] .btn {
-  background: #111; color: #c8c8b0; border: 0; padding: 6px 10px;
-  font: 700 12px/1 "Courier New", monospace;
+  background: #0a1018; color: #a8b8a8; border: 0; padding: 10px 12px;
+  font: 700 14px/1 "Courier New", monospace;
 }
+[data-era="t28"] .folder a { font-size: 14px; }
+[data-era="t28"] .folder b { font-size: 14px; }
+[data-era="t28"] .folder em { font-size: 12px; }
 [data-era="t28"] .phone-home-btn,
 [data-era="t28"] .phone-gesture,
 [data-era="t28"] .phone-island,

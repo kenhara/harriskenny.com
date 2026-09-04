@@ -2,6 +2,12 @@
   var SITE = window.SITE;
   var phoneMq = window.matchMedia("(max-width: " + SITE.phoneBreakpoint + "px)");
   var phoneMode = phoneMq.matches;
+  function deviceKind() {
+    var w = window.innerWidth || document.documentElement.clientWidth || 0;
+    if (w <= (SITE.phoneMax || SITE.phoneBreakpoint || 480)) return "phone";
+    if (w < (SITE.desktopMin || 1024)) return "tablet";
+    return "desktop";
+  }
   var eras = phoneMode ? SITE.phoneEras : SITE.eras;
   var eraIndex = 0;
   var z = 8;
@@ -20,7 +26,8 @@
   function activeEras() { return phoneMode ? SITE.phoneEras : SITE.eras; }
   function defaultEraId() { return phoneMode ? SITE.defaultPhoneEra : SITE.defaultEra; }
 
-  /* Visual paint only — no eraIndex / history. Hover preview and commit both use this. */
+  /* Visual paint only — no eraIndex / history. Hover preview and commit both use this.
+     Desktop + phone share this path: theme, ticks, and device chrome/home for the painted era. */
   function paintEra(i) {
     var era = eras[Math.max(0, Math.min(eras.length - 1, i))];
     document.documentElement.setAttribute("data-era", era.id);
@@ -36,24 +43,26 @@
       handle.style.left = (r.left + r.width / 2 - tr.left) + "px";
     }
     ticks.forEach(function (t, n) { t.classList.toggle("on", n === idx); });
-    if (!phoneMode) paintChrome(era.id);
-    else paintPhoneChrome(era.id);
+    if (!phoneMode) {
+      paintChrome(era.id);
+    } else {
+      paintPhoneChrome(era.id);
+      renderPhoneHome(era);
+      syncPhoneSoftkeys(era.id);
+    }
   }
 
   function applyEra(i, fromUi) {
     eraIndex = Math.max(0, Math.min(eras.length - 1, i));
     var era = currentEra();
+    if (phoneMode) closePhoneSheet();
     paintEra(eraIndex);
     $("#tm-track").setAttribute("aria-valuenow", String(eraIndex));
     $("#tm-track").setAttribute("aria-valuemax", String(eras.length - 1));
     $("#tm-track").setAttribute("aria-valuetext", era.name);
     $("#tm-track").setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     if ($("#start-menu")) $("#start-menu").classList.remove("open");
-    if (phoneMode) {
-      closePhoneSheet();
-      renderPhoneHome();
-      syncPhoneSoftkeys();
-    } else {
+    if (!phoneMode) {
       syncLauncherChrome();
       renderTasks();
     }
@@ -192,8 +201,17 @@
   function closePhoneSheet() {
     phoneOpenId = null;
     var sheet = $("#phone-sheet");
-    if (sheet) sheet.hidden = true;
     var home = $("#phone-home");
+    if (sheet) {
+      sheet.classList.remove("is-open");
+      if (currentEra().id === "ios") {
+        window.setTimeout(function () {
+          if (!phoneOpenId && sheet) sheet.hidden = true;
+        }, 320);
+      } else {
+        sheet.hidden = true;
+      }
+    }
     if (home) home.hidden = false;
     syncPhoneSoftkeys();
   }
@@ -207,15 +225,23 @@
     var title = $("#phone-sheet-title");
     var body = $("#phone-sheet-body");
     if (home) home.hidden = true;
-    if (sheet) sheet.hidden = false;
     if (title) title.textContent = app.windowTitle;
     if (body) body.innerHTML = paneFor(app);
+    if (sheet) {
+      sheet.hidden = false;
+      sheet.classList.remove("is-open");
+      window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(function () {
+          if (phoneOpenId === id) sheet.classList.add("is-open");
+        });
+      });
+    }
     syncPhoneSoftkeys();
   }
 
-  function syncPhoneSoftkeys() {
+  function syncPhoneSoftkeys(eraIdOpt) {
     var sk = $("#phone-softkeys");
-    var id = currentEra().id;
+    var id = eraIdOpt || currentEra().id;
     var open = !!phoneOpenId;
     document.documentElement.classList.toggle("phone-app-open", open);
     if (!sk) return;
@@ -244,7 +270,7 @@
   }
 
   function paintPhoneChrome(id) {
-    document.documentElement.classList.toggle("phone-feature", isFeaturePhone());
+    document.documentElement.classList.toggle("phone-feature", !!FEATURE[id]);
     var carrier = $("#phone-carrier");
     if (carrier) {
       if (id === "nokia3310") carrier.textContent = "NOKIA";
@@ -260,16 +286,18 @@
     }
   }
 
-  function renderPhoneHome() {
+  function renderPhoneHome(eraOpt) {
     var home = $("#phone-home");
     if (!home) return;
-    var id = currentEra().id;
+    var era = eraOpt || currentEra();
+    var id = era.id;
     phoneFocus = Math.min(phoneFocus, SITE.apps.length - 1);
     if (id === "gzone") {
-      home.className = "phone-home phone-home-grid";
+      /* Text-only grid — modern plugin glyphs look wrong on a feature phone */
+      home.className = "phone-home phone-home-grid phone-home-textgrid";
       home.innerHTML = "<div class='phone-grid'>" + SITE.apps.map(function (app, i) {
         return "<button type='button' class='phone-grid-item" + (i === phoneFocus ? " focus" : "") + "' data-app='" + app.id + "' data-i='" + i + "'>" +
-          window.ICONS.wrap(app.id) + "<span class='label'>" + app.name + "</span></button>";
+          "<span class='label'>" + app.name + "</span></button>";
       }).join("") + "</div>";
     } else if (FEATURE[id]) {
       home.className = "phone-home phone-home-list";
@@ -282,12 +310,12 @@
       home.className = "phone-home phone-home-icons" + (id === "ios" ? " phone-home-ios" : "");
       var useDock = (id === "ios" || id === "pixel");
       var isIos = id === "ios";
-      /* iOS: Weather|Calendar; Agentforce 2x2 left with LinkedIn+X stacked right. Dock = first 4. */
-      var gridApps = isIos ? [] : (useDock ? SITE.apps.slice(4) : SITE.apps);
+      /* iOS: Weather|Calendar; LinkedIn+X stacked under Weather. Dock = first 4. */
       var dockApps = useDock ? SITE.apps.slice(0, 4) : null;
       var sideApps = isIos
         ? SITE.apps.filter(function (a) { return a.id === "linkedin" || a.id === "x"; })
         : [];
+      var gridApps = isIos ? [] : (useDock ? SITE.apps.slice(4) : SITE.apps);
       function iconBtn(app, dock) {
         return "<button type='button' class='phone-icon i-" + app.id + (dock ? " phone-dock-icon" : "") + "' data-app='" + app.id + "'>" +
           window.ICONS.wrap(app.id) + (dock ? "" : "<span class='label'>" + app.name + "</span>") + "</button>";
@@ -298,14 +326,17 @@
         var dow = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/Denver" }).format(now).toUpperCase();
         var dom = new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone: "America/Denver" }).format(now);
         html += "<div class='phone-widgets'>" +
-          "<div class='phone-widget phone-widget-weather' aria-hidden='true'>" +
-            "<div class='phone-widget-face'>" +
-              "<div class='pw-loc'>Denver</div>" +
-              "<div class='pw-temp'>72°</div>" +
-              "<div class='pw-cond'>Partly Cloudy</div>" +
-              "<div class='pw-hl'>H:78° L:55°</div>" +
+          "<div class='phone-widget-stack'>" +
+            "<div class='phone-widget phone-widget-weather' aria-hidden='true'>" +
+              "<div class='phone-widget-face'>" +
+                "<div class='pw-loc'>Denver</div>" +
+                "<div class='pw-temp'>72°</div>" +
+                "<div class='pw-cond'>Partly Cloudy</div>" +
+                "<div class='pw-hl'>H:78° L:55°</div>" +
+              "</div>" +
+              "<span class='phone-widget-label'>Weather</span>" +
             "</div>" +
-            "<span class='phone-widget-label'>Weather</span>" +
+            "<div class='phone-widget-side'>" + sideApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>" +
           "</div>" +
           "<div class='phone-widget phone-widget-cal' aria-hidden='true'>" +
             "<div class='phone-widget-face'>" +
@@ -315,28 +346,10 @@
             "</div>" +
             "<span class='phone-widget-label'>Calendar</span>" +
           "</div>" +
-          "<div class='phone-widget-band'>" +
-            "<button type='button' class='phone-widget phone-widget-agentforce' data-app='outboundsync' aria-label='Agentforce'>" +
-              "<div class='phone-widget-face'>" +
-                "<div class='pw-af-head'>" +
-                  "<svg class='pw-af-mascot' viewBox='0 0 24 24' width='22' height='22' aria-hidden='true'><circle cx='12' cy='12' r='12' fill='#032d60'/><path d='M4.5 10.2c1.2-1.4 2.8-2.1 4.3-2.1s3.1.7 4.2 2.1c1.1-1.4 2.7-2.1 4.2-2.1 1.5 0 3.1.7 4.3 2.1v.4c-1.1 1.2-2.6 1.9-4.3 1.9-1.5 0-2.9-.6-4-1.6-1.1 1-2.5 1.6-4 1.6-1.7 0-3.2-.7-4.3-1.9v-.4z' fill='#0a2540'/><rect x='5.2' y='9.3' width='5.2' height='3.2' rx='1.2' fill='#0b1f3a' stroke='#7eb6ff' stroke-width='.7'/><rect x='13.6' y='9.3' width='5.2' height='3.2' rx='1.2' fill='#0b1f3a' stroke='#7eb6ff' stroke-width='.7'/><path d='M10.4 10.9h3.2' stroke='#7eb6ff' stroke-width='1' stroke-linecap='round'/><path d='M9 15.2c1.1 1.1 4.9 1.1 6 0' fill='none' stroke='#7eb6ff' stroke-width='1.2' stroke-linecap='round'/></svg>" +
-                  "<span class='pw-af-title'>Agentforce</span>" +
-                "</div>" +
-                "<div class='pw-af-actions' aria-hidden='true'>" +
-                  "<span class='pw-af-btn pw-af-kb'><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><rect x='3' y='7' width='18' height='11' rx='2' fill='none' stroke='#032d60' stroke-width='1.7'/><path d='M6 10h2M10 10h2M14 10h2M18 10h.01M6 13h2M10 13h2M14 13h2M18 13h.01M8 16h8' stroke='#032d60' stroke-width='1.5' stroke-linecap='round'/></svg></span>" +
-                  "<span class='pw-af-btn pw-af-mic'><svg viewBox='0 0 24 24' width='20' height='20' aria-hidden='true'><rect x='9' y='3.5' width='6' height='10' rx='3' fill='#032d60'/><path d='M6.5 11.5a5.5 5.5 0 0 0 11 0' fill='none' stroke='#032d60' stroke-width='1.7' stroke-linecap='round'/><path d='M12 17v3.2M9.5 20.5h5' stroke='#032d60' stroke-width='1.7' stroke-linecap='round'/></svg></span>" +
-                "</div>" +
-              "</div>" +
-              "<span class='phone-widget-label'>Agentforce</span>" +
-            "</button>" +
-            "<div class='phone-widget-side'>" + sideApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>" +
-          "</div>" +
         "</div>";
       }
-      if (!isIos) {
+      if (gridApps.length) {
         html += "<div class='phone-icons'>" + gridApps.map(function (app) { return iconBtn(app, false); }).join("") + "</div>";
-      } else {
-        html += "<div class='phone-icons phone-icons-empty' aria-hidden='true'></div>";
       }
       if (dockApps) {
         html += "<div class='phone-pages' aria-hidden='true'><span class='on'></span></div>";
@@ -505,7 +518,7 @@
   function rebuildTicks() {
     var ticks = $("#tm-ticks");
     ticks.innerHTML = eras.map(function (e, i) {
-      var left = eras.length === 1 ? 50 : 3 + (i / (eras.length - 1)) * 94;
+      var left = eras.length === 1 ? 50 : 5 + (i / (eras.length - 1)) * 90;
       return "<button type='button' class='tm-tick' data-i='" + i + "' style='left:" + left + "%'><i></i>" + e.short + "</button>";
     }).join("");
     $all(".tm-tick").forEach(function (t) {
@@ -655,6 +668,15 @@
     bindPhoneChrome();
     renderPhoneHome();
     setPhoneVisibility(phoneMode);
+    (function applyEraQuery() {
+      try {
+        var q = new URLSearchParams(location.search).get("era");
+        if (!q) return;
+        var list = phoneMode ? SITE.phoneEras : SITE.eras;
+        var hit = list.find(function (e) { return e.id === q; });
+        if (hit) applyEra(hit.id);
+      } catch (err) {}
+    })();
   }
 
   function bindTimeMachine() {
@@ -688,7 +710,7 @@
   function applyDeviceMode(on) {
     phoneMode = on;
     eras = activeEras();
-    document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    document.documentElement.dataset.device = deviceKind();
     var tmTrack = $("#tm-track");
     if (tmTrack) tmTrack.setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     if (!phoneMode) document.documentElement.classList.remove("phone-feature", "phone-app-open");
@@ -711,7 +733,7 @@
   }
 
   function bindPhoneMode() {
-    document.documentElement.dataset.device = phoneMode ? "phone" : "desktop";
+    document.documentElement.dataset.device = deviceKind();
     var tmTrack0 = $("#tm-track");
     if (tmTrack0) tmTrack0.setAttribute("aria-label", phoneMode ? "Phone history" : "Computer history");
     setPhoneVisibility(phoneMode);
