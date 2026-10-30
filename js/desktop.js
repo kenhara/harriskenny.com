@@ -119,6 +119,8 @@
   function isOmarchy() { return !phoneMode && currentEra().id === "omarchy"; }
   function isPopos() { return !phoneMode && currentEra().id === "popos"; }
   function usesLauncher() { return isOmarchy() || isPopos(); }
+  /* Desktop viewports pin the Omarchy Go menu on the left; tablet keeps the centered toggle. */
+  function goPinned() { return isOmarchy() && deviceKind() === "desktop"; }
 
   function goMenuEl() { return $("#go-menu"); }
   function activitiesEl() { return $("#activities"); }
@@ -131,6 +133,7 @@
       go.classList.remove("open");
       return;
     }
+    if (goPinned()) on = true;
     go.hidden = !on;
     go.classList.toggle("open", !!on);
   }
@@ -168,7 +171,7 @@
     }
     var open = $all(".window.open");
     if (open.length) {
-      showGoMenu(false);
+      showGoMenu(goPinned());
       showActivities(false);
       open.forEach(placeLauncherPop);
     } else if (isOmarchy()) {
@@ -188,9 +191,15 @@
     win.classList.add(isPopos() ? "pop-pop" : "omarchy-pop");
     win.classList.remove("hypr", "zoomed");
     win.style.width = w + "px";
-    win.style.maxWidth = "min(92vw, " + w + "px)";
     win.style.height = "auto";
-    win.style.left = "50%";
+    if (goPinned()) {
+      /* Center in the space right of the pinned Go menu so the two never overlap. */
+      win.style.maxWidth = "min(calc(100% - var(--go-reserve) - 24px), " + w + "px)";
+      win.style.left = "calc(50% + var(--go-reserve) / 2)";
+    } else {
+      win.style.maxWidth = "min(92vw, " + w + "px)";
+      win.style.left = "50%";
+    }
     win.style.top = "50%";
     win.style.right = "auto";
     win.style.bottom = "auto";
@@ -704,7 +713,11 @@
       if (e.key === "End") next = eras.length - 1;
       if (next !== eraIndex) { e.preventDefault(); applyEra(next, true); }
     });
-    window.addEventListener("resize", function () { paintEra(eraIndex); });
+    window.addEventListener("resize", function () {
+      document.documentElement.dataset.device = deviceKind();
+      paintEra(eraIndex);
+      if (isOmarchy()) syncLauncherChrome();
+    });
   }
 
   function applyDeviceMode(on) {
@@ -800,6 +813,12 @@
       if (isOmarchy()) {
         var go = goMenuEl();
         if (!go) return;
+        if (goPinned()) {
+          showGoMenu(true);
+          var gf = $(".go-filter", go);
+          if (gf) gf.focus();
+          return;
+        }
         showGoMenu(go.hidden || !go.classList.contains("open"));
       } else if (isPopos()) {
         var act = activitiesEl();
