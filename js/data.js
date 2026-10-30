@@ -29,7 +29,7 @@ window.SITE = {
       kind: "folder",
       kids: {
         title: "Omarchy Kids",
-        blurb: "I contribute to Omarchy Linux, a beautiful, fun, agentic Linux distribution by DHH. I help with the Omarchy Kids project and maintain several plugins, including:",
+        blurb: "I contribute to Omarchy Linux, a beautiful, fun, agentic Linux distribution by DHH. I help with the Omarchy Kids project and maintain several plugins and projects, including:",
         action: { label: "Learn more about Omarchy", href: "https://omarchy.org/" }
       },
       items: [
@@ -38,7 +38,8 @@ window.SITE = {
         { id: "compliantish", name: "Compliantish", blurb: "quiet checks on the machine", href: "https://github.com/kenhara/omarchy-compliantish" },
         { id: "enricherino", name: "Enricherino", blurb: "look someone up from the bar", href: "https://github.com/kenhara/omarchy-enricherino" },
         { id: "encyclopedic", name: "Encyclopedic", blurb: "search from the bar", href: "https://github.com/kenhara/omarchy-encyclopedic" },
-        { id: "scriptural", name: "Scriptural", blurb: "Bible verse of the day", href: "https://github.com/kenhara/omarchy-scriptural" }
+        { id: "scriptural", name: "Scriptural", blurb: "Bible verse of the day", href: "https://github.com/kenhara/omarchy-scriptural" },
+        { id: "usuba", name: "Usuba", blurb: "a local model trained on Omarchy plugin data", href: "https://usuba.dev/" }
       ]
     },
     {
