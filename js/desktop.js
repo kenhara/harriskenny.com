@@ -119,7 +119,7 @@
   function isOmarchy() { return !phoneMode && currentEra().id === "omarchy"; }
   function isPopos() { return !phoneMode && currentEra().id === "popos"; }
   function usesLauncher() { return isOmarchy() || isPopos(); }
-  /* Desktop viewports pin the Omarchy Go menu on the left; tablet keeps the centered toggle. */
+  /* Desktop viewports keep the centered Omarchy Go menu always shown; tablet keeps the toggle. */
   function goPinned() { return isOmarchy() && deviceKind() === "desktop"; }
 
   function goMenuEl() { return $("#go-menu"); }
@@ -192,18 +192,19 @@
     win.classList.remove("hypr", "zoomed");
     win.style.width = w + "px";
     win.style.height = "auto";
-    if (goPinned()) {
-      /* Center in the space right of the pinned Go menu so the two never overlap. */
-      win.style.maxWidth = "min(calc(100% - var(--go-reserve) - 24px), " + w + "px)";
-      win.style.left = "calc(50% + var(--go-reserve) / 2)";
-    } else {
-      win.style.maxWidth = "min(92vw, " + w + "px)";
-      win.style.left = "50%";
-    }
     win.style.top = "50%";
     win.style.right = "auto";
     win.style.bottom = "auto";
-    win.style.transform = "translate(-50%, -50%)";
+    if (goPinned()) {
+      /* Dock beside the centered Go menu, inside the right half, so neither covers the other. */
+      win.style.maxWidth = "min(calc(50% - var(--go-w) / 2 - var(--go-gap) * 2), " + w + "px)";
+      win.style.left = "calc(50% + var(--go-w) / 2 + var(--go-gap))";
+      win.style.transform = "translateY(-50%)";
+    } else {
+      win.style.maxWidth = "min(92vw, " + w + "px)";
+      win.style.left = "50%";
+      win.style.transform = "translate(-50%, -50%)";
+    }
   }
 
   /* —— Phone shell —— */

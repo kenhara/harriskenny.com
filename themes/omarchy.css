@@ -50,16 +50,13 @@
 }
 [data-era="omarchy"] .go-menu.open { display: block; }
 
-/* Desktop: Go menu is pinned to the left and always shown; popups center in the rest. */
+/* Desktop: Go menu stays centered and always shown; popups open to its right. */
 [data-era="omarchy"][data-device="desktop"] .desktop {
-  --go-left: 24px;
   --go-w: 300px;
-  --go-reserve: calc(var(--go-left) + var(--go-w) + 24px);
+  --go-gap: 24px;
 }
 [data-era="omarchy"][data-device="desktop"] .go-menu {
   display: block;
-  left: var(--go-left); top: 50%;
-  transform: translateY(-50%);
   width: var(--go-w);
   max-height: calc(100% - 32px);
   overflow-y: auto;
