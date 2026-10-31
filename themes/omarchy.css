@@ -50,17 +50,12 @@
 }
 [data-era="omarchy"] .go-menu.open { display: block; }
 
-/* Desktop: Go menu stays centered and always shown; popups open to its right. */
-[data-era="omarchy"][data-device="desktop"] .desktop {
-  --go-w: 300px;
-  --go-gap: 24px;
-}
+/* Desktop: Go menu stays centered and always shown; centered popups stack above it (z-index 6 < windows). */
 [data-era="omarchy"][data-device="desktop"] .go-menu {
   display: block;
-  width: var(--go-w);
+  width: 300px;
   max-height: calc(100% - 32px);
   overflow-y: auto;
-  z-index: 99;
 }
 [data-era="omarchy"] .go-head {
   display: flex; align-items: center; gap: 8px;

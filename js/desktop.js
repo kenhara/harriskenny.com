@@ -119,7 +119,7 @@
   function isOmarchy() { return !phoneMode && currentEra().id === "omarchy"; }
   function isPopos() { return !phoneMode && currentEra().id === "popos"; }
   function usesLauncher() { return isOmarchy() || isPopos(); }
-  /* Desktop viewports keep the centered Omarchy Go menu always shown; tablet keeps the toggle. */
+  /* Desktop viewports keep the centered Omarchy Go menu always shown (popups cover it); tablet keeps the toggle. */
   function goPinned() { return isOmarchy() && deviceKind() === "desktop"; }
 
   function goMenuEl() { return $("#go-menu"); }
@@ -192,19 +192,12 @@
     win.classList.remove("hypr", "zoomed");
     win.style.width = w + "px";
     win.style.height = "auto";
+    win.style.maxWidth = "min(92vw, " + w + "px)";
     win.style.top = "50%";
+    win.style.left = "50%";
     win.style.right = "auto";
     win.style.bottom = "auto";
-    if (goPinned()) {
-      /* Dock beside the centered Go menu, inside the right half, so neither covers the other. */
-      win.style.maxWidth = "min(calc(50% - var(--go-w) / 2 - var(--go-gap) * 2), " + w + "px)";
-      win.style.left = "calc(50% + var(--go-w) / 2 + var(--go-gap))";
-      win.style.transform = "translateY(-50%)";
-    } else {
-      win.style.maxWidth = "min(92vw, " + w + "px)";
-      win.style.left = "50%";
-      win.style.transform = "translate(-50%, -50%)";
-    }
+    win.style.transform = "translate(-50%, -50%)";
   }
 
   /* —— Phone shell —— */
